@@ -1,0 +1,293 @@
+/* ============================================================
+   BOOP — SISTEMA DIGITAL "ATENÇÃO"
+   Design Tokens · v1.0
+   Nomenclatura em português. Prefixos:
+   cor- tipo- esp- grid- raio- traco- dur- ease- z-
+   ============================================================ */
+
+:root {
+  /* ---------- 1. CORES PRIMITIVAS (extraídas do logotipo) ---------- */
+
+  /* Navy — a tinta. Retirada de fill="#0B1B2C" do "o" da logo. */
+  --cor-navy-900: #05101B;
+  --cor-navy-800: #0B1B2C; /* BASE DE MARCA */
+  --cor-navy-700: #12293F;
+  --cor-navy-600: #1B3A55;
+  --cor-navy-500: #2A4F6E;
+  --cor-navy-400: #4C6F8C;
+  --cor-navy-300: #7A95AB;
+  --cor-navy-200: #AFC1CE;
+  --cor-navy-100: #DCE4EA;
+
+  /* Ciano — o sinal. Retirado do stop #00C2FF do gradiente do chifre. */
+  --cor-ciano-700: #0079A8;
+  --cor-ciano-600: #009BD6;
+  --cor-ciano-500: #00C2FF; /* BASE DE MARCA */
+  --cor-ciano-400: #47D3FF;
+  --cor-ciano-300: #7AD7F4; /* segundo ciano do brandbook */
+  --cor-ciano-200: #B4E8FB;
+  --cor-ciano-100: #E2F7FE;
+
+  /* Osso — o papel. Retirado de fill="#FFFDF5". Branco quente, nunca #FFFFFF. */
+  --cor-osso-100: #FFFDF5; /* BASE DE MARCA */
+  --cor-osso-200: #F7F4EA;
+  --cor-osso-300: #EDE9DD;
+  --cor-osso-400: #DAD5C7;
+
+  /* Pretos de marca */
+  --cor-pupila: #1A1A1A; /* pupila do logotipo. único preto permitido em texto */
+  --cor-breu:   #1B171F; /* stop final do gradiente do chifre */
+
+  /* Gradiente do chifre — ÚNICO gradiente do sistema.
+     Vertical, curto, aplicado só a formas angulosas de marca. Nunca a fundos. */
+  --grad-chifre: linear-gradient(180deg, #00C2FF 0%, #1B171F 100%);
+
+  /* Funcionais (feedback de formulário apenas) */
+  --cor-erro:    #E2483C;
+  --cor-sucesso: #1F9E6B;
+
+
+  /* ---------- 2. PLANOS (semantic tokens) ----------
+     O sistema tem TRÊS planos. A página alterna entre eles por seção.
+     Nunca dois planos iguais adjacentes. Ver §Ritmo Visual.        */
+
+  /* Padrão = Plano Osso */
+  --fundo:        var(--cor-osso-100);
+  --fundo-2:      var(--cor-osso-200);
+  --fundo-3:      var(--cor-osso-300);
+  --tinta:        var(--cor-navy-800);
+  --tinta-2:      var(--cor-navy-500);
+  --tinta-3:      var(--cor-navy-300);
+  --tinta-invers: var(--cor-osso-100);
+  --traco:        var(--cor-navy-100);
+  --traco-forte:  var(--cor-navy-800);
+  --sinal:        var(--cor-ciano-500); /* só preenchimento/traço — NUNCA texto */
+  --sinal-texto:  var(--cor-ciano-700); /* ciano legível quando precisa ser texto */
+  --sinal-tinta:  var(--cor-navy-800);  /* o que se escreve SOBRE o sinal */
+  --foco:         var(--cor-navy-800);
+}
+
+[data-plano="osso"] {
+  --fundo: var(--cor-osso-100);
+  --fundo-2: var(--cor-osso-200);
+  --fundo-3: var(--cor-osso-300);
+  --tinta: var(--cor-navy-800);
+  --tinta-2: var(--cor-navy-500);
+  --tinta-3: var(--cor-navy-300);
+  --tinta-invers: var(--cor-osso-100);
+  --traco: var(--cor-navy-100);
+  --traco-forte: var(--cor-navy-800);
+  --sinal: var(--cor-ciano-500);
+  --sinal-texto: var(--cor-ciano-700);
+  --sinal-tinta: var(--cor-navy-800);
+  --foco: var(--cor-navy-800);
+}
+
+[data-plano="navy"] {
+  --fundo: var(--cor-navy-800);
+  --fundo-2: var(--cor-navy-700);
+  --fundo-3: var(--cor-navy-600);
+  --tinta: var(--cor-osso-100);
+  --tinta-2: var(--cor-navy-200);
+  --tinta-3: var(--cor-navy-400);
+  --tinta-invers: var(--cor-navy-800);
+  --traco: var(--cor-navy-600);
+  --traco-forte: var(--cor-ciano-500);
+  --sinal: var(--cor-ciano-500);
+  --sinal-texto: var(--cor-ciano-500); /* no navy o ciano PODE ser texto: 8.2:1 */
+  --sinal-tinta: var(--cor-navy-800);
+  --foco: var(--cor-ciano-500);
+}
+
+[data-plano="ciano"] {
+  --fundo: var(--cor-ciano-500);
+  --fundo-2: var(--cor-ciano-400);
+  --fundo-3: var(--cor-ciano-200);
+  --tinta: var(--cor-navy-800);
+  --tinta-2: var(--cor-navy-700);
+  --tinta-3: var(--cor-navy-600);
+  --tinta-invers: var(--cor-ciano-500);
+  --traco: var(--cor-navy-600);
+  --traco-forte: var(--cor-navy-800);
+  --sinal: var(--cor-navy-800);
+  --sinal-texto: var(--cor-navy-800);
+  --sinal-tinta: var(--cor-osso-100);
+  --foco: var(--cor-navy-800);
+}
+
+
+/* ---------- 3. TIPOGRAFIA ---------- */
+:root {
+  --fonte: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  /* Companheira técnica. SÓ contadores, metadados e rótulos de dado.
+     Nunca texto de leitura. Pode ser removida sem prejuízo ao sistema. */
+  --fonte-tec: "JetBrains Mono", ui-monospace, monospace;
+
+  --peso-regular: 400;
+  --peso-medio:   500;
+  --peso-semi:    600;
+  --peso-bold:    700;
+
+  /* Escala desktop (≥1024px) */
+  --tipo-mega: 200px;  /* deslocado. 1× por página, corta no viewport */
+  --tipo-d1:   120px;
+  --tipo-d2:   88px;
+  --tipo-d3:   64px;
+  --tipo-t1:   44px;
+  --tipo-t2:   32px;
+  --tipo-t3:   24px;
+  --tipo-corpo-g: 20px;
+  --tipo-corpo:   17px;
+  --tipo-corpo-p: 15px;
+  --tipo-rotulo:  12px;
+
+  /* Entrelinha */
+  --lh-mega:  0.82;
+  --lh-display: 0.92;
+  --lh-titulo:  1.06;
+  --lh-t3:      1.25;
+  --lh-corpo:   1.55;
+  --lh-corpo-g: 1.45;
+  --lh-rotulo:  1.2;
+
+  /* Tracking — negativo no display, aberto no rótulo. Nunca no corpo. */
+  --tr-mega:   -0.045em;
+  --tr-display:-0.03em;
+  --tr-titulo: -0.02em;
+  --tr-t3:     -0.01em;
+  --tr-corpo:   0em;
+  --tr-rotulo:  0.16em;
+  --tr-tec:     0.04em;
+
+  /* Medida de leitura */
+  --medida-curta: 38ch;
+  --medida:       58ch;
+  --medida-longa: 72ch;
+}
+
+/* Escala mobile (<768px) — o display encolhe mais que o corpo.
+   O corpo NUNCA desce de 16px. */
+@media (max-width: 767px) {
+  :root {
+    --tipo-mega: 76px;
+    --tipo-d1:   52px;
+    --tipo-d2:   40px;
+    --tipo-d3:   32px;
+    --tipo-t1:   27px;
+    --tipo-t2:   22px;
+    --tipo-t3:   19px;
+    --tipo-corpo-g: 18px;
+    --tipo-corpo:   16px;
+    --tipo-corpo-p: 14px;
+    --tipo-rotulo:  11px;
+    --lh-mega: 0.88;
+    --lh-display: 0.98;
+    --tr-mega: -0.035em;
+    --tr-display: -0.025em;
+  }
+}
+
+
+/* ---------- 4. ESPAÇO ----------
+   Base 4px. Não existe valor de espaço fora desta escala. */
+:root {
+  --esp-1:  4px;
+  --esp-2:  8px;
+  --esp-3:  12px;
+  --esp-4:  16px;
+  --esp-5:  24px;
+  --esp-6:  32px;
+  --esp-7:  48px;
+  --esp-8:  64px;
+  --esp-9:  96px;
+  --esp-10: 128px;
+  --esp-11: 192px;
+  --esp-12: 256px;
+
+  /* Ritmo de seção — o vazio é componente, por isso tem token próprio. */
+  --secao-y:        clamp(96px, 12vw, 192px);
+  --secao-y-ampla:  clamp(128px, 18vw, 256px);
+  --secao-y-densa:  clamp(64px, 7vw, 96px);
+}
+
+
+/* ---------- 5. GRID E CONTAINER ---------- */
+:root {
+  --grid-col: 12;
+  --grid-gutter: 24px;
+  --grid-margem: clamp(20px, 5vw, 80px);
+
+  --larg-max:     1440px; /* container padrão */
+  --larg-ampla:   1720px; /* quase-bleed, para mídia */
+  --larg-estreita: 880px; /* editorial / manifesto */
+  --larg-texto:    680px; /* bloco de leitura */
+}
+
+@media (max-width: 1023px) { :root { --grid-col: 6; --grid-gutter: 20px; } }
+@media (max-width: 767px)  { :root { --grid-col: 4; --grid-gutter: 16px; } }
+
+/* Breakpoints (referência — use em @media, não como var) */
+/* --bp-sm: 480px  --bp-md: 768px  --bp-lg: 1024px  --bp-xl: 1280px  --bp-2xl: 1600px */
+
+
+/* ---------- 6. BORDA E RAIO ----------
+   REGRA DURA: o raio é 0 ou é círculo completo. Nada entre os dois.
+   O logotipo é feito de círculos perfeitos e cortes retos. */
+:root {
+  --raio-0:     0px;
+  --raio-total: 999px; /* pílula: botões, chips, tags */
+  --raio-olho:  50%;   /* círculo: aberturas, avatares, marcadores */
+
+  --traco-fino:  1px;
+  --traco-medio: 2px;
+  --traco-bloco: 3px;
+
+  /* Sem sombra no sistema. Profundidade vem de plano e de sobreposição.
+     Exceção única: elevação de camada flutuante (menu, modal). */
+  --sombra-camada: 0 24px 64px -16px rgba(5, 16, 27, 0.35);
+}
+
+
+/* ---------- 7. MOTION ----------
+   Motion protagonista: toda animação carrega narrativa ou resposta. */
+:root {
+  --dur-1: 120ms;  /* microinteração: toque, troca de estado */
+  --dur-2: 240ms;  /* hover, foco */
+  --dur-3: 420ms;  /* entrada de elemento, reveal curto */
+  --dur-4: 720ms;  /* reveal de mídia, máscara de texto */
+  --dur-5: 1200ms; /* transição de página, sequência de hero */
+
+  --ease-padrao:  cubic-bezier(0.20, 0.80, 0.20, 1.00);
+  --ease-entrada: cubic-bezier(0.16, 1.00, 0.30, 1.00); /* expo.out */
+  --ease-saida:   cubic-bezier(0.70, 0.00, 0.84, 0.00); /* expo.in  */
+  --ease-faisca:  cubic-bezier(0.34, 1.56, 0.64, 1.00); /* overshoot. só microinteração */
+  --ease-linear:  linear;                                /* só parallax e marquee */
+
+  --stagger: 60ms;
+  --parallax: 0.12; /* fator. mídia move 12% da distância de scroll */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --dur-3: 300ms; --dur-4: 500ms; --dur-5: 800ms;
+    --parallax: 0;  /* sem parallax e sem pin no mobile */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 1ms; --dur-2: 1ms; --dur-3: 1ms; --dur-4: 1ms; --dur-5: 1ms;
+    --parallax: 0; --stagger: 0ms;
+  }
+}
+
+
+/* ---------- 8. CAMADAS ---------- */
+:root {
+  --z-base: 0;
+  --z-midia: 10;
+  --z-conteudo: 20;
+  --z-nav: 80;
+  --z-menu: 90;
+  --z-cursor: 100;
+}
