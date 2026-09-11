@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><defs><filter id="dust"><feTurbulence baseFrequency=".43" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="luminanceToAlpha"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0 1 1"/></feComponentTransfer></filter></defs><rect width="400" height="240" filter="url(#dust)"/></svg>
+

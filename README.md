@@ -1,6 +1,6 @@
-# Boop — Antes de fazer, olhar.
+# Boop — Olhe além.
 
-Homepage da consultoria de gestão de marca e crescimento Boop. Desenvolvida a partir de `BOOP-CODEX-MASTER.md`, do Design System Digital ATENÇÃO e dos materiais institucionais fornecidos.
+Homepage da consultoria de gestão de marca e crescimento Boop. Direção editorial de campanha, desenvolvida a partir do MASTER, do brandbook, dos materiais institucionais e da reformulação solicitada pelo usuário.
 
 ## Desenvolvimento
 
@@ -17,17 +17,21 @@ O build gera um site estático em `dist/`, sem backend ou variáveis secretas. A
 
 ## Estrutura
 
-- `index.html`: conteúdo semântico, metadados e narrativa completa.
-- `src/tokens.css`: tokens originais fornecidos.
-- `src/style.css`: composição, responsividade e estados visuais.
-- `src/main.ts`: menu nativo, olhar responsivo, narrativa de scroll e motion progressivo.
-- `public/assets`: somente materiais da Boop otimizados para web.
-- `docs/direcao-e-fontes.md`: decisões, procedência e pendências de conteúdo.
+- `index.html`: conteúdo semântico, metadados e narrativa.
+- `src/tokens.css`: tokens da identidade fornecida.
+- `src/campaign.css`: composição editorial, responsividade e estados visuais.
+- `src/campaign.ts`: menu, abas acessíveis, sequência do método e narrativa de scroll.
+- `public/assets`: materiais institucionais, escultura original e texturas.
+- `docs/direcao-e-fontes.md`: decisões e procedência.
+- `docs/hero-image-prompt.txt`: prompt completo do objeto central gerado.
+- `docs/validacao.md`: verificação e limites.
 
-Nenhum conteúdo essencial depende de animação. O modo de movimento reduzido desativa transformações e fixação; o mobile recebe composição própria, sem pin ou rastreamento do ponteiro. Os serviços usam `details` nativo, acessível por teclado.
+A hero usa uma escultura óptica criada para a Boop, letras monumentais e dissolução granular. A virada “Preciso de um site.” → “O que precisa mudar no seu negócio?” e o CTA ciano “Dê um boop.” foram preservados em essência e redesenhados.
+
+As capacidades funcionam como três cenas tipográficas selecionáveis. O método é uma sequência horizontal com toque, controles e teclado. O movimento reduzido desativa transformações e fixação; no celular, a virada mantém a transformação pelo scroll sem fixar a seção.
 
 ## Conteúdo e publicação
 
-O contato confirmado é `contato@deumboop.com.br`. O domínio institucional informado nos materiais é `https://deumboop.com.br/` e é usado em canonical, sitemap e dados estruturados. O domínio da marca ainda não foi alterado por este projeto.
+O contato confirmado é `contato@deumboop.com.br`. O domínio institucional `https://deumboop.com.br/` é usado em canonical, sitemap e dados estruturados. O domínio da marca não foi alterado por este projeto.
 
-Os cases Hapuck, Hertmann e Velmont estão reservados para uma etapa futura, conforme orientação do usuário. Não são apresentados como trabalhos publicados, e nenhuma métrica ou resultado foi inventado.
+Hapuck, Hertmann e Velmont estão reservados para uma etapa futura. Não são apresentados como cases existentes, e nenhuma métrica ou resultado foi inventado.
