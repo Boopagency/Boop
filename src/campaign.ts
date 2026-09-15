@@ -1,123 +1,97 @@
 import './tokens.css';
 import './campaign.css';
-
+import './evolution.css';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const room = matchMedia('(min-height: 620px)');
 const desktop = matchMedia('(min-width: 1024px)');
-const mobile = matchMedia('(max-width: 767px)');
 const fine = matchMedia('(pointer: fine)');
 const clamp = (n: number, min = 0, max = 1) => Math.max(min, Math.min(max, n));
-const menu = document.querySelector<HTMLDialogElement>('#mobile-menu')!;
-const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
-toggle.addEventListener('click', () => {
-  menu.showModal(); toggle.setAttribute('aria-expanded','true'); document.body.style.overflow = 'hidden';
-});
+const q = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
+const all = <T extends HTMLElement>(selector: string) => [...document.querySelectorAll<T>(selector)];
+const menu = q<HTMLDialogElement>('#mobile-menu');
+const toggle = q<HTMLButtonElement>('.menu-toggle');
+toggle.addEventListener('click', () => { menu.showModal(); toggle.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; });
 menu.querySelector('.menu-close')!.addEventListener('click', () => menu.close());
-menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => menu.close()));
-menu.addEventListener('close', () => { document.body.style.overflow = ''; toggle.setAttribute('aria-expanded','false'); });
-mobile.addEventListener('change', () => { if (!mobile.matches && menu.open) menu.close(); });
-
-// A native, keyboard-operable tab system changes the whole capability scene.
-const tablist = document.querySelector<HTMLElement>('.capability-tabs')!;
-const tabs = [...tablist.querySelectorAll<HTMLButtonElement>('[role=tab]')];
-function selectTab(index: number, moveFocus = false) {
-  tabs.forEach((tab, i) => {
-    const selected = i === index;
-    tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
-    const panel = document.getElementById(tab.getAttribute('aria-controls')!)!;
-    panel.hidden = !selected;
-    if (selected && !reduced.matches) {
-      panel.querySelector('.world-word')!.animate([{transform:'translateX(64px)',opacity:.3},{transform:'translateX(0)',opacity:1}], {duration:600,easing:'cubic-bezier(.16,1,.3,1)'});
-    }
-  });
-  if (moveFocus) tabs[index].focus();
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.close()));
+menu.addEventListener('close', () => { document.body.style.overflow=''; toggle.setAttribute('aria-expanded','false'); });
+matchMedia('(max-width: 767px)').addEventListener('change', e => { if(!e.matches && menu.open) menu.close(); });
+const turn = q('#visao'), quotes = all('.request-quote'), count = q('.request-count');
+const caps = q('#frentes'), worlds = all('.cap-world'), indices = all('.cap-index li');
+const method = q('#metodo'), track = q<HTMLOListElement>('.method-steps'), viewport = q('.method-viewport'), steps = all('.method-steps li');
+const previous = q<HTMLButtonElement>('.method-prev'), next = q<HTMLButtonElement>('.method-next'), current = q('.method-current');
+const hero = q('.hero'), object = q('.hero-object');
+let enabled = false, pending = 0, methodIndex = 0, capabilityIndex = -1, quoteIndex = -1, travel = 0;
+type Scene = { element: HTMLElement; top: number; span: number };
+let scenes: Scene[] = [];
+function measure() {
+  scenes = [turn,caps,method].map(element => ({element, top:element.getBoundingClientRect().top+scrollY, span:Math.max(1,element.offsetHeight-element.querySelector<HTMLElement>('.scene-pin')!.offsetHeight)}));
+  travel = Math.max(0,track.scrollWidth-viewport.clientWidth);
+  requestFrame();
 }
-tabs.forEach((tab,index) => tab.addEventListener('click', () => selectTab(index)));
-tablist.addEventListener('keydown', event => {
-  const index = tabs.indexOf(document.activeElement as HTMLButtonElement);
-  let next = index;
-  if (['ArrowDown','ArrowRight'].includes(event.key)) next = (index + 1) % tabs.length;
-  else if (['ArrowUp','ArrowLeft'].includes(event.key)) next = (index - 1 + tabs.length) % tabs.length;
-  else if (event.key === 'Home') next = 0;
-  else if (event.key === 'End') next = tabs.length - 1;
-  else return;
-  event.preventDefault(); selectTab(next,true);
-});
-function setTabOrientation() { tablist.setAttribute('aria-orientation', mobile.matches ? 'horizontal' : 'vertical'); }
-mobile.addEventListener('change',setTabOrientation); setTabOrientation();
-
-const track = document.querySelector<HTMLOListElement>('.method-steps')!;
-const steps = [...track.querySelectorAll<HTMLLIElement>('li')];
-const previous = document.querySelector<HTMLButtonElement>('.method-prev')!;
-const next = document.querySelector<HTMLButtonElement>('.method-next')!;
-const current = document.querySelector<HTMLElement>('.method-current')!;
-let methodIndex = 0;
-function updateMethod() {
-  const left = track.getBoundingClientRect().left;
-  methodIndex = steps.reduce((best, step, index) => Math.abs(step.getBoundingClientRect().left-left) < Math.abs(steps[best].getBoundingClientRect().left-left) ? index : best, 0);
-  // The final page exposes the last step even when multiple steps fit on desktop.
-  if (track.scrollWidth - track.clientWidth - track.scrollLeft < 8) methodIndex = steps.length - 1;
-  previous.disabled = track.scrollLeft < 8;
-  next.disabled = track.scrollWidth - track.clientWidth - track.scrollLeft < 8;
-  steps.forEach((step,index) => step.classList.toggle('is-active',index===methodIndex));
-  current.textContent = `${String(methodIndex + 1).padStart(2,'0')} — ${steps[methodIndex].querySelector('h3')!.textContent}`;
+function progress(scene: Scene) { return clamp((scrollY-scene.top)/scene.span); }
+function activateMethod(index: number) {
+  methodIndex = index;
+  steps.forEach((step,i) => step.classList.toggle('is-active',i===index));
+  current.textContent = `${String(index+1).padStart(2,'0')} — ${steps[index].querySelector('h3')!.textContent}`;
+  previous.disabled = index===0; next.disabled = index===4;
 }
-function moveMethod(direction: number) {
-  const distance = steps[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap);
-  track.scrollBy({left:distance*direction,behavior:reduced.matches?'instant':'smooth'});
-}
-previous.addEventListener('click',()=>moveMethod(-1)); next.addEventListener('click',()=>moveMethod(1));
-track.addEventListener('scroll',updateMethod,{passive:true});
-track.addEventListener('keydown', event => {
-  if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();moveMethod(event.key==='ArrowRight'?1:-1);}
-  if(event.key==='Home'||event.key==='End'){event.preventDefault();track.scrollTo({left:event.key==='Home'?0:track.scrollWidth,behavior:reduced.matches?'instant':'smooth'});}
-});
-
-const hero = document.querySelector<HTMLElement>('.hero')!;
-const object = document.querySelector<HTMLElement>('.hero-object')!;
-const turn = document.querySelector<HTMLElement>('.turn')!;
-const stage = document.querySelector<HTMLElement>('.turn-stage')!;
-const film = document.querySelector<HTMLImageElement>('.brand-film img')!;
-let frame = 0;
-function updateScroll() {
-  frame = 0;
-  if(reduced.matches) return;
-  const rect = turn.getBoundingClientRect();
-  const progress = desktop.matches ? clamp((innerHeight*.38-rect.top)/(rect.height-innerHeight*.3)) : clamp((innerHeight*.8-rect.top)/(rect.height+innerHeight*.1));
-  stage.style.setProperty('--strike',String(clamp(progress*2.8)));
-  stage.style.setProperty('--underline',String(clamp((progress-.3)*2.3)));
-  stage.style.setProperty('--quote-shift',`${progress*(desktop.matches?32:8)}px`);
-  stage.style.setProperty('--quote-opacity',String(1-progress*.58));
-  stage.style.setProperty('--question-scale',String(.88+progress*.12));
-  stage.style.setProperty('--question-shift',`${(1-progress)*(desktop.matches?48:16)}px`);
-  stage.style.setProperty('--connector-rotate',`${progress*45}deg`);
-  if(desktop.matches){
-    const heroProgress=clamp(-hero.getBoundingClientRect().top/hero.offsetHeight);
-    object.style.translate=`0 ${heroProgress*64}px`;
-    const filmRect=film.getBoundingClientRect();
-    const filmProgress=clamp((innerHeight-filmRect.top)/(innerHeight+filmRect.height));
-    film.style.clipPath=`inset(0 ${Math.max(0,8-filmProgress*24)}%)`;
+function render() {
+  pending=0;
+  if(!enabled || scenes.length!==3) return;
+  const [a,b,c] = scenes;
+  const p = progress(a), quotePhase = Math.min(p/.78, .99999)*3, qi = Math.floor(quotePhase);
+  if(qi!==quoteIndex) {
+    quoteIndex=qi;
+    quotes.forEach((quote,i) => { quote.classList.toggle('is-active', i===qi); quote.setAttribute('aria-hidden',String(i!==qi)); });
+    count.textContent=`0${qi+1} — 03`;
   }
+  turn.style.setProperty('--strike',String(clamp((quotePhase-qi-.18)*2.5)));
+  turn.style.setProperty('--question-opacity',String(.55+clamp((p-.1)/.8)*.45));
+  turn.style.setProperty('--underline',String(clamp((p-.7)/.25)));
+  turn.style.setProperty('--progress',String(p));
+  const cp = progress(b), ci = Math.min(2,Math.floor(cp*3));
+  if(ci!==capabilityIndex) {
+    capabilityIndex=ci;
+    worlds.forEach((world,i) => { world.classList.toggle('is-active',i===ci); world.inert=i!==ci; world.setAttribute('aria-hidden',String(i!==ci)); indices[i].classList.toggle('is-active',i===ci); });
+  }
+  caps.style.setProperty('--progress',String(cp));
+  const mp = progress(c), movement=clamp((mp-.04)/.9);
+  track.style.transform=`translate3d(${-travel*movement}px,0,0)`;
+  method.style.setProperty('--progress',String(mp));
+  activateMethod(Math.min(4,Math.round(movement*4)));
+  if(desktop.matches && hero.getBoundingClientRect().bottom>0) object.style.translate=`0 ${clamp(-hero.getBoundingClientRect().top/hero.offsetHeight)*48}px`;
 }
-const requestScroll=()=>{if(!frame)frame=requestAnimationFrame(updateScroll)};
-hero.addEventListener('pointermove',event=>{
+function requestFrame(){ if(!pending) pending=requestAnimationFrame(render); }
+function configure(){
+  enabled=!reduced.matches && room.matches;
+  document.documentElement.classList.toggle('scroll-motion',enabled);
+  worlds.forEach(world=>{world.inert=false;world.removeAttribute('aria-hidden');});
+  quotes.forEach(quote=>quote.removeAttribute('aria-hidden'));
+  capabilityIndex=-1;quoteIndex=-1;
+  if(!enabled){ track.style.transform=''; [turn,caps,method,object].forEach(el=>el.removeAttribute('style')); document.getAnimations().forEach(a=>a.cancel()); }
+  measure();
+}
+function moveMethod(index: number) {
+  index=clamp(index,0,4);
+  if(enabled){ const scene=scenes[2]; scrollTo({top:scene.top+scene.span*(.04+.9*index/4),behavior:reduced.matches?'instant':'smooth'}); }
+  else steps[index].scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'center'});
+  activateMethod(index);
+}
+previous.addEventListener('click',()=>moveMethod(methodIndex-1));
+next.addEventListener('click',()=>moveMethod(methodIndex+1));
+track.addEventListener('keydown',e=>{
+  if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;
+  e.preventDefault(); moveMethod(e.key==='Home'?0:e.key==='End'?4:methodIndex+(e.key==='ArrowRight'?1:-1));
+});
+hero.addEventListener('pointermove',e=>{
   if(reduced.matches||!desktop.matches||!fine.matches)return;
-  const r=hero.getBoundingClientRect();
-  object.style.setProperty('--object-x',`${(event.clientX/r.width-.5)*24}px`);
-  object.style.setProperty('--object-y',`${((event.clientY-r.top)/r.height-.5)*16}px`);
-  object.style.setProperty('--object-rotate',`${-7+(event.clientX/r.width-.5)*3}deg`);
+  const rect=hero.getBoundingClientRect();
+  object.style.setProperty('--object-x',`${(e.clientX/rect.width-.5)*20}px`);
+  object.style.setProperty('--object-y',`${((e.clientY-rect.top)/rect.height-.5)*12}px`);
 });
-hero.addEventListener('pointerleave',()=>{object.style.removeProperty('--object-x');object.style.removeProperty('--object-y');object.style.removeProperty('--object-rotate')});
-function configureMotion(){
-  document.documentElement.classList.toggle('motion-ready',!reduced.matches);
-  if(reduced.matches){document.getAnimations().forEach(a=>a.cancel());stage.removeAttribute('style');object.removeAttribute('style');film.style.clipPath='';}
-  if(!desktop.matches){object.removeAttribute('style');film.style.clipPath='';}
-  requestScroll();updateMethod();
-}
-addEventListener('scroll',requestScroll,{passive:true});
-addEventListener('resize',()=>{requestScroll();updateMethod()},{passive:true});
-reduced.addEventListener('change',configureMotion);desktop.addEventListener('change',configureMotion);configureMotion();
-document.fonts.ready.then(()=>{
-  if(reduced.matches||scrollY>innerHeight/2)return;
-  object.animate([{opacity:0,translate:'0 40px'},{opacity:1,translate:'0 0'}],{duration:1000,easing:'cubic-bezier(.16,1,.3,1)'});
-  document.querySelector('.hero-title')!.animate([{clipPath:'inset(0 0 100%)'},{clipPath:'inset(0)'}],{duration:800,easing:'cubic-bezier(.16,1,.3,1)'});
-});
+hero.addEventListener('pointerleave',()=>{object.style.removeProperty('--object-x');object.style.removeProperty('--object-y');});
+addEventListener('scroll',requestFrame,{passive:true});
+addEventListener('resize',measure,{passive:true});
+reduced.addEventListener('change',configure);room.addEventListener('change',configure);
+new ResizeObserver(measure).observe(document.body);
+configure(); document.fonts.ready.then(measure); addEventListener('pageshow',measure);

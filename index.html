@@ -24,13 +24,13 @@
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <header class="navigation" data-plano="navy">
     <a class="brand" href="#inicio" aria-label="Boop — início"><img src="/assets/logo-light.webp" width="128" height="69" alt="Boop" fetchpriority="high" /></a>
-    <nav class="desktop-nav" aria-label="Navegação principal"><a href="#visao">O olhar</a><a href="#frentes">O que fazemos</a><a href="#metodo">Como pensamos</a></nav>
+    <nav class="desktop-nav" aria-label="Navegação principal"><a href="#visao">O olhar</a><a href="#frentes">O que fazemos</a><a href="#cases">Cases</a><a href="#metodo">Como pensamos</a></nav>
     <a class="nav-contact" href="#contato">Vamos conversar <span aria-hidden="true">↗</span></a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu"><span></span><span></span></button>
   </header>
   <dialog id="mobile-menu" class="mobile-menu" aria-label="Menu de navegação" data-plano="navy">
     <div class="menu-top"><span class="eyebrow">Um novo ponto de vista.</span><button class="menu-close" aria-label="Fechar menu">×</button></div>
-    <nav aria-label="Navegação mobile"><a href="#visao">O olhar<span>01</span></a><a href="#frentes">O que fazemos<span>02</span></a><a href="#metodo">Como pensamos<span>03</span></a><a href="#contato">Vamos conversar<span>↗</span></a></nav>
+    <nav aria-label="Navegação mobile"><a href="#visao">O olhar<span>01</span></a><a href="#frentes">O que fazemos<span>02</span></a><a href="#cases">Cases<span>04</span></a><a href="#depoimentos">Quem conta<span>05</span></a><a href="#metodo">Como pensamos<span>06</span></a><a href="#contato">Vamos conversar<span>↗</span></a></nav>
     <a class="menu-email" href="mailto:contato@deumboop.com.br">contato@deumboop.com.br</a>
   </dialog>
   <main id="conteudo">
@@ -40,52 +40,108 @@
       <div class="hero-caption"><span class="eyebrow">Consultoria de gestão<br />de marca & crescimento</span><p>Antes da entrega,<br />a pergunta certa.</p><a class="hero-link" href="#contato">Comece uma conversa <span aria-hidden="true">↗</span></a></div>
       <div class="hero-side"><a class="scroll-link" href="#visao" aria-label="Conheça o nosso olhar"><span aria-hidden="true">↓</span></a></div>
     </section>
-    <section id="visao" class="turn section" data-plano="osso" aria-labelledby="turn-title">
-      <div class="section-marker"><span>{01}</span><span>Antes da resposta, a pergunta</span></div>
-      <div class="turn-stage">
-        <p class="request-quote">“Preciso de um site.”</p>
-        <span class="turn-connector" aria-hidden="true">↘</span>
-        <h2 id="turn-title">O que precisa<br />mudar no seu<br /><span class="underlined">negócio?</span></h2>
-        <p class="turn-description">A gente começa nessa pergunta.<br />A entrega vem depois da direção.</p>
-      </div>
-      <span class="turn-rule" aria-hidden="true"></span>
-    </section>
-    <section id="frentes" class="capabilities section" data-plano="navy" aria-labelledby="capabilities-title">
-      <div class="section-marker"><span>{02}</span><span>Uma direção. Muitas formas de fazer.</span></div>
-      <div class="capabilities-heading"><h2 id="capabilities-title">Ideia boa<br />pede mundo.</h2><p>Da estratégia ao que<br />a sua marca coloca na rua.</p></div>
-      <div class="capabilities-stage">
-        <div class="capability-tabs" role="tablist" aria-label="Frentes de atuação" aria-orientation="vertical">
-          <button id="tab-conteudo" role="tab" aria-selected="true" aria-controls="panel-conteudo"><span>01</span>Conteúdo<i aria-hidden="true">↗</i></button>
-          <button id="tab-digital" role="tab" aria-selected="false" aria-controls="panel-digital" tabindex="-1"><span>02</span>Digital<i aria-hidden="true">↗</i></button>
-          <button id="tab-projetos" role="tab" aria-selected="false" aria-controls="panel-projetos" tabindex="-1"><span>03</span>Projetos<small>& tecnologia</small><i aria-hidden="true">↗</i></button>
+
+    <section id="visao" class="turn scroll-scene" data-plano="osso" aria-labelledby="turn-title">
+      <div class="scene-pin turn-pin">
+        <div class="section-marker"><span>{01}</span><span>Antes da resposta, a pergunta</span></div>
+        <div class="turn-stage">
+          <div class="requests" aria-label="Pedidos que chegam até a gente">
+            <p class="request-quote is-active"><span>“Preciso de um site.”</span></p>
+            <p class="request-quote"><span>“Quero postar mais.”</span></p>
+            <p class="request-quote"><span>“Preciso vender melhor.”</span></p>
+          </div>
+          <span class="turn-connector" aria-hidden="true">↘</span>
+          <h2 id="turn-title">O que precisa<br />mudar no seu<br /><span class="underlined">negócio?</span></h2>
+          <div class="turn-footer"><span class="request-count" aria-hidden="true">01 — 03</span><p>A gente começa nessa pergunta.<br />A entrega vem depois da direção.</p></div>
         </div>
-        <div class="capability-panels">
-          <article id="panel-conteudo" role="tabpanel" aria-labelledby="tab-conteudo" tabindex="0" data-world="conteudo"><span class="world-label">O que a marca tem a dizer.</span><div class="world-word" aria-hidden="true">Ter<br /><em>voz.</em></div><p>Conteúdo e comunicação<br />com intenção.</p><span class="world-index" aria-hidden="true">01 / 03</span></article>
-          <article id="panel-digital" role="tabpanel" aria-labelledby="tab-digital" tabindex="0" data-world="digital" hidden><span class="world-label">Do primeiro olhar ao próximo clique.</span><div class="world-word" aria-hidden="true">Estar<br /><em>aqui.</em></div><p>Sites, e-commerce<br />e experiências digitais.</p><span class="world-index" aria-hidden="true">02 / 03</span></article>
-          <article id="panel-projetos" role="tabpanel" aria-labelledby="tab-projetos" tabindex="0" data-world="projetos" hidden><span class="world-label">Quando a ideia precisa sair do papel.</span><div class="world-word" aria-hidden="true">Fazer<br /><em>fluir.</em></div><p>Sistemas, automações<br />e tecnologia aplicada.</p><span class="world-index" aria-hidden="true">03 / 03</span></article>
-        </div>
+        <div class="scene-progress" aria-hidden="true"><span></span></div>
       </div>
     </section>
-    <section id="universo" class="universe" data-plano="osso" aria-labelledby="universe-title">
-      <div class="section-marker"><span>{03}</span><span>Da intenção à forma</span></div>
-      <div class="universe-heading"><h2 id="universe-title">Não basta<br />ficar na ideia.</h2><p>A estratégia só ganha corpo<br />quando encontra execução.</p></div>
-      <figure class="brand-film"><img src="/assets/boop-construcao.webp" width="1344" height="756" loading="lazy" decoding="async" alt="Peça institucional da Boop: uma escultura em construção, com a frase ‘Fazemos coisas que as pessoas lembram’." /><figcaption><span>O universo Boop</span><span>Apresentação institucional</span></figcaption></figure>
-      <div class="universe-bottom"><span class="eyebrow">Pensamento em movimento.</span><span aria-hidden="true">Forma.</span></div>
+    <section id="frentes" class="capabilities scroll-scene" data-plano="navy" aria-labelledby="capabilities-title">
+      <div class="scene-pin cap-pin">
+        <div class="section-marker"><span>{02}</span><span>Uma direção. Muitas formas de fazer.</span><a class="scene-skip" href="#universo">Continuar ↓</a></div>
+        <div class="cap-layout">
+          <div class="cap-intro"><h2 id="capabilities-title">Ideia boa<br /> pede mundo.</h2><p>Da estratégia ao que<br />a sua marca coloca na rua.</p>
+            <ol class="cap-index" aria-label="Frentes de atuação"><li class="is-active"><span>01</span>Conteúdo</li><li><span>02</span>Digital</li><li><span>03</span>Projetos<br /><small>& tecnologia</small></li></ol>
+          </div>
+          <div class="cap-worlds">
+            <article class="cap-world is-active" data-world="conteudo" aria-labelledby="content-name"><div class="world-top"><h3 id="content-name">Conteúdo</h3><span>01 / 03</span></div><p class="world-label">O que a marca tem a dizer.</p><div class="world-word" aria-hidden="true">Ter<br /><em>voz.</em></div><p class="world-description">Conteúdo e comunicação<br />com intenção.</p><span class="world-sign" aria-hidden="true">↗</span></article>
+            <article class="cap-world" data-world="digital" aria-labelledby="digital-name"><div class="world-top"><h3 id="digital-name">Digital</h3><span>02 / 03</span></div><p class="world-label">Do primeiro olhar ao próximo clique.</p><div class="world-word" aria-hidden="true">Estar<br /><em>aqui.</em></div><p class="world-description">Sites, e-commerce<br />e experiências digitais.</p><span class="world-sign" aria-hidden="true">↗</span></article>
+            <article class="cap-world" data-world="projetos" aria-labelledby="projects-name"><div class="world-top"><h3 id="projects-name">Projetos & tecnologia</h3><span>03 / 03</span></div><p class="world-label">Quando a ideia precisa sair do papel.</p><div class="world-word" aria-hidden="true">Fazer<br /><em>fluir.</em></div><p class="world-description">Sistemas, automações<br />e tecnologia aplicada.</p><span class="world-sign" aria-hidden="true">↗</span></article>
+          </div>
+        </div>
+        <div class="scene-progress" aria-hidden="true"><span></span></div>
+      </div>
     </section>
-    <section id="metodo" class="method section" data-plano="navy" aria-labelledby="method-title">
-      <div class="section-marker"><span>{04}</span><span>O raciocínio antes da entrega</span></div>
-      <div class="method-heading"><h2 id="method-title">Nada<br />por acaso.</h2><div class="method-controls"><button type="button" class="method-prev" aria-label="Etapa anterior" disabled>←</button><button type="button" class="method-next" aria-label="Próxima etapa">→</button></div></div>
-      <ol class="method-steps" aria-label="Etapas do método Boop" tabindex="0">
-        <li><span class="step-number" aria-hidden="true">01</span><h3>Entender</h3><p>Escutar o pedido.<br />Conhecer o negócio.</p></li>
-        <li><span class="step-number" aria-hidden="true">02</span><h3>Diagnosticar</h3><p>Encontrar o que está travando<br />o próximo passo.</p></li>
-        <li><span class="step-number" aria-hidden="true">03</span><h3>Direcionar</h3><p>Definir prioridades.<br />Escolher o caminho.</p></li>
-        <li><span class="step-number" aria-hidden="true">04</span><h3>Construir</h3><p>Colocar a estratégia<br />no mundo.</p></li>
-        <li><span class="step-number" aria-hidden="true">05</span><h3>Medir</h3><p>Ler o que aconteceu.<br />Ajustar a direção.</p></li>
-      </ol>
-      <div class="method-bottom"><span class="method-current" aria-live="polite">01 — Entender</span><p>O método organiza o caminho.<br />O negócio define a direção.</p></div>
+    <section id="universo" class="connection section" data-plano="osso" aria-labelledby="connection-title">
+      <div class="section-marker"><span>{03}</span><span>O negócio por inteiro</span></div>
+      <div class="connection-heading"><h2 id="connection-title">Uma marca.<br />Tudo conectado.</h2><p>A mesma direção em tudo<br />que o seu negócio faz.</p></div>
+      <div class="connection-lines">
+        <div><span class="connection-number">01 /</span><h3>Marca.</h3><p>O que você representa.</p></div>
+        <div><span class="connection-number">02 /</span><h3>Presença.</h3><p>Como você se apresenta.</p></div>
+        <div><span class="connection-number">03 /</span><h3>Operação.</h3><p>Como tudo funciona.</p></div>
+      </div>
+      <div class="connection-end"><span aria-hidden="true">↘</span><p>Quando as partes conversam,<br />a marca faz sentido.</p></div>
+    </section>
+    <section id="cases" class="cases section" data-plano="navy" aria-labelledby="cases-title">
+      <div class="section-marker"><span>{04}</span><span>Trabalhos selecionados</span></div>
+      <div class="works-window" data-plano="osso">
+        <div class="works-topline"><span>Boop / Em prática</span><span class="works-tab">Cases</span><span>Digital</span></div>
+        <div class="works-title"><h2 id="cases-title">Do olhar<br />ao mundo.</h2><p>Marcas diferentes.<br />Um olhar para cada uma.</p></div>
+        <a class="case-feature" href="https://hertmann.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Conhecer o site Hertmann — abre em nova aba">
+          <div class="hertmann-art"><img src="/assets/case-hertmann-editorial.webp" width="1122" height="1402" loading="lazy" decoding="async" alt="Composição editorial de um anel com pedra oval sobre uma superfície clara, criada a partir da referência Hertmann." /><div class="case-overlay"><span class="eyebrow">01 / Website</span><h3>Hertmann</h3><p>O detalhe encontra<br />o digital.</p><span class="case-open">Conhecer o site <span aria-hidden="true">↗</span></span></div></div>
+        </a>
+        <a class="case-secondary" href="https://www.hapuck.com.br/" target="_blank" rel="noopener noreferrer" aria-label="Conhecer o site Hapuck Scents — abre em nova aba">
+          <div class="hapuck-art"><img src="/assets/case-hapuck.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="Difusores e fragrâncias da Hapuck Scents apresentados em seu site." /></div><div class="case-copy"><span class="eyebrow">02 / Website</span><h3>Hapuck<br />Scents</h3><p>Um universo sensorial.<br />Uma presença digital.</p><span class="case-open">Conhecer o site <span aria-hidden="true">↗</span></span></div>
+        </a>
+        <a class="case-velmont" href="https://www.grupovelmont.com/" target="_blank" rel="noopener noreferrer" aria-label="Conhecer o site Velmont — abre em nova aba">
+          <img src="/assets/case-velmont.webp" width="1536" height="1024" loading="lazy" decoding="async" alt="Montanhas apresentadas na identidade visual do site Velmont." />
+          <div class="velmont-copy"><span class="eyebrow">03 / Website</span><h3>Velmont</h3><p>Valor construído.<br />Presença à altura.</p><span class="case-open">Conhecer o site <span aria-hidden="true">↗</span></span></div>
+          <span class="velmont-category">Propriedade intelectual</span>
+        </a>
+        <div class="works-bottom"><span>Estratégia encontra execução.</span><span aria-hidden="true">boop.</span></div>
+      </div>
+    </section>
+    <section id="depoimentos" class="testimonials section" data-plano="osso" aria-labelledby="testimonials-title">
+      <div class="section-marker"><span>{05}</span><span>Do outro lado da conversa</span></div>
+      <div class="testimonials-heading"><h2 id="testimonials-title">Quem viveu,<br /><span>conta.</span></h2><span class="quote-symbol" aria-hidden="true">“</span></div>
+      <div class="testimonials-grid">
+        <figure class="testimonial testimonial-large"><div class="quote-top"><span class="initials" aria-hidden="true">DC</span><span aria-hidden="true">“</span></div><blockquote>Gostei bastante. Bem legal, isso que imaginávamos. Parabéns pessoal! Por isso desejo indicar os clientes para vocês! 🔥👏🏻</blockquote><figcaption><span>Danielle Cubas</span><a href="https://www.grupovelmont.com/" target="_blank" rel="noopener noreferrer">Velmont <span aria-hidden="true">↗</span></a></figcaption></figure>
+        <figure class="testimonial testimonial-short"><div class="quote-top"><span class="initials" aria-hidden="true">BH</span><span aria-hidden="true">“</span></div><blockquote>Inclusive amamos o web site, o trabalho de vocês é incrível !</blockquote><figcaption><span>Barbara Hertmann</span><a href="https://hertmann.vercel.app/" target="_blank" rel="noopener noreferrer">Hertmann <span aria-hidden="true">↗</span></a></figcaption></figure>
+      </div>
+    </section>
+    <section id="metodo" class="method scroll-scene" data-plano="navy" aria-labelledby="method-title">
+      <div class="scene-pin method-pin">
+        <div class="section-marker"><span>{06}</span><span>O raciocínio antes da entrega</span><a class="scene-skip" href="#fundadores">Quem somos ↓</a></div>
+        <div class="method-heading"><h2 id="method-title">Nada por acaso.</h2><div class="method-controls"><button type="button" class="method-prev" aria-label="Etapa anterior" disabled>←</button><button type="button" class="method-next" aria-label="Próxima etapa">→</button></div></div>
+        <div class="method-viewport"><ol class="method-steps" aria-label="Etapas do método Boop" tabindex="0">
+          <li class="is-active"><span class="step-number" aria-hidden="true">01</span><h3>Entender</h3><p>Escutar o pedido.<br />Conhecer o negócio.</p></li>
+          <li><span class="step-number" aria-hidden="true">02</span><h3>Diagnosticar</h3><p>Encontrar o que está travando<br />o próximo passo.</p></li>
+          <li><span class="step-number" aria-hidden="true">03</span><h3>Direcionar</h3><p>Definir prioridades.<br />Escolher o caminho.</p></li>
+          <li><span class="step-number" aria-hidden="true">04</span><h3>Construir</h3><p>Colocar a estratégia<br />no mundo.</p></li>
+          <li><span class="step-number" aria-hidden="true">05</span><h3>Medir</h3><p>Ler o que aconteceu.<br />Ajustar a direção.</p></li>
+        </ol></div>
+        <div class="method-bottom"><span class="method-current">01 — Entender</span><p>O método organiza o caminho.<br />O negócio define a direção.</p></div>
+        <div class="scene-progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+    <section id="fundadores" class="founders section" data-plano="osso" aria-labelledby="founders-title">
+      <div class="section-marker"><span>{07}</span><span>Quem está por trás do olhar</span></div>
+      <div class="founders-heading"><h2 id="founders-title">Dois olhares.<br />Uma Boop.</h2><p>Prazer, somos Jabez e Renatha.<br />As pessoas por trás da conversa.</p></div>
+      <div class="founders-grid">
+        <article class="founder-card"><div class="founder-caption"><h3>Jabez Oliveira</h3><span>Fundador</span></div><div class="founder-photo"><img src="/assets/founder-jabez.webp" width="1122" height="1402" alt="Jabez Oliveira, fundador da Boop." loading="lazy" decoding="async" /></div></article>
+        <article class="founder-card"><div class="founder-caption"><h3>Renatha</h3><span>Fundadora</span></div><div class="founder-photo"><img src="/assets/founder-renatha.webp" width="1122" height="1402" alt="Renatha, fundadora da Boop." loading="lazy" decoding="async" /></div></article>
+      </div>
+    </section>
+    <section id="instagram" class="instagram section" data-plano="osso" aria-labelledby="instagram-title">
+      <div class="section-marker"><span>{08}</span><span>O olhar continua por lá</span></div>
+      <div class="instagram-layout">
+        <div class="instagram-copy"><span class="eyebrow">Boop no Instagram</span><h2 id="instagram-title">De perto.<br />Todo dia.</h2><p>Ideias, bastidores e novos<br />pontos de vista.</p><a class="instagram-link" href="https://www.instagram.com/boop.oficial_/" target="_blank" rel="noopener noreferrer">@boop.oficial_ <span aria-hidden="true">↗</span></a></div>
+        <div class="instagram-feed"><iframe src="https://www.instagram.com/boop.oficial_/embed/" title="Perfil da Boop no Instagram" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media" width="640" height="470"></iframe><a class="instagram-fallback" href="https://www.instagram.com/boop.oficial_/" target="_blank" rel="noopener noreferrer">Ver todas as publicações no Instagram <span aria-hidden="true">↗</span></a></div>
+      </div>
     </section>
     <section id="contato" class="contact section" data-plano="ciano" aria-labelledby="contact-title">
-      <div class="section-marker"><span>{05}</span><span>A próxima conversa</span></div>
+      <div class="section-marker"><span>{09}</span><span>A próxima conversa</span></div>
       <p class="contact-lead">Tem alguma coisa que precisa andar?</p>
       <h2 id="contact-title">Dê um<br /><span>boop.</span></h2>
       <a class="contact-action" href="mailto:contato@deumboop.com.br" aria-label="Conversar com a Boop por e-mail"><span class="contact-action-label">Vamos conversar</span><span aria-hidden="true">↗</span></a>
