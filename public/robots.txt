@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://deumboop.com.br/sitemap.xml
