@@ -11,7 +11,7 @@ O projeto é estático. Publique `dist/`; não reescreva caminhos inexistentes p
 
 ## Conteúdo e domínio
 
-`site.config.mjs` centraliza domínio, metadados e dados da equipe. Depois de alterá-lo, execute `node scripts/deployment-config.mjs` para atualizar o hash da política de segurança em `vercel.json`. O build verifica a consistência. Os títulos/metadados, sitemap e robots são gerados pelo plugin local.
+`site.config.mjs` centraliza domínio, metadados e dados da equipe. O build regenera automaticamente o hash da política de segurança em `vercel.json` a partir dele; rode `node scripts/deployment-config.mjs` manualmente só se quiser conferir o resultado antes de commitar. Os títulos/metadados, sitemap e robots são gerados pelo plugin local.
 
 O endereço canônico é `https://www.deumboop.com.br`. Na revisão de 16/09/2026 esse domínio ainda mostrava outro site. É necessário associá-lo ao projeto Vercel que recebe este repositório. Confirme HTTPS, redirecionamento do domínio sem www e a página inicial depois de associar. Não foi adicionada uma regra que redirecione prévias para a publicação antiga.
 

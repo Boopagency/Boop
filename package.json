@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --configLoader native",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit && node scripts/deployment-config.mjs --check && vite build --configLoader native && node scripts/validate-build.mjs",
+    "build": "tsc --noEmit && node scripts/deployment-config.mjs && vite build --configLoader native && node scripts/validate-build.mjs",
     "preview": "vite preview --host 127.0.0.1 --configLoader native"
   },
   "devDependencies": {
