@@ -19,7 +19,10 @@
 .instagram-feed [hidden]{display:none!important}
 .instagram-fallback{font-size:14px;line-height:1.5}
 .scene-skip{gap:8px}
-.cap-index button{background:none;border:0;padding:4px 0;min-height:44px;text-align:left;font:inherit;line-height:inherit;color:inherit;letter-spacing:inherit;width:100%}
+.cap-index li{padding-left:0}
+.cap-index button{background:none;border:0;padding:4px 0;min-height:44px;text-align:left;font:inherit;line-height:inherit;color:inherit;letter-spacing:inherit;width:100%;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:20px;align-items:baseline}
+.cap-index button>.cap-number{font:12px var(--fonte-tec);letter-spacing:0}
+.cap-index button>.cap-label{min-width:0}
 .cap-index button small{font-size:.6em}
 .cap-index button:focus-visible{outline-color:var(--cor-ciano-500)}
 .method-controls button{display:grid;place-items:center}
@@ -32,3 +35,5 @@ html:not(.scroll-motion) .request-quote{margin-bottom:20px}
 @media(max-width:767px){.founders-grid{grid-template-columns:1fr}.founder-caption{min-height:0}.founder-caption h3{font-size:22px}.hero-caption .hero-link{font-size:14px}.hero-caption .eyebrow{font-size:12px;max-width:220px}.footer-privacy{grid-column:1/-1}.instagram-placeholder{height:350px;padding:24px}.founders-heading p{max-width:none}.cap-index button{font-size:16px}.cap-index button small{font-size:12px}.cap-index li{padding-top:8px}}
 @media(max-width:360px){.navigation{padding-inline:16px;gap:8px}.brand,.brand img{width:64px}.nav-contact{gap:6px;font-size:12px}.hero-caption{max-width:210px}.hero-side{right:16px}.hero-caption .hero-link{gap:12px}.turn-footer{gap:12px}.method-heading h2{font-size:32px}.scene-skip{font-size:12px}}
 @media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}.hero-title .title-solid{mask-image:none}.hero-title .title-dust{display:none}}
+@media(max-width:767px){.cap-index button{grid-template-columns:max-content minmax(0,1fr);column-gap:8px}}
+@media(max-width:380px){.cap-index button{grid-template-columns:1fr;row-gap:6px;align-content:start;font-size:14px}}
