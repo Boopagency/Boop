@@ -19,7 +19,7 @@ O endereço canônico é `https://deumboop.com.br` (sem www). Na Vercel, `deumbo
 
 Sem Analytics, Tag Manager ou pixel. Os eventos locais `boop:interaction` transportam somente `action` e `placement`; não armazenam dados nem enviam requisições. A integração futura deverá incluir a revisão de consentimento, privacidade e CSP antes de instalar scripts. Não coloque segredos em variáveis VITE_ ou no HTML.
 
-O Instagram só é solicitado após o clique em Carregar publicações. Desativar remove o iframe e devolve o foco ao botão. O link externo funciona independentemente do embed. O contato usa mailto; não há formulário ou backend.
+O Instagram só é solicitado após o clique em Carregar publicações. Desativar remove o iframe e devolve o foco ao botão. O link externo funciona independentemente do embed. O CTA comercial principal (“Vamos conversar”, na seção de contato) abre o WhatsApp oficial por um link externo `wa.me` em nova aba, sem script ou SDK do WhatsApp/Meta. O e-mail `contato@deumboop.com.br` continua disponível como canal secundário, via mailto. Não há formulário ou backend.
 
 ## Validação de 16/09/2026
 

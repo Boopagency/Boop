@@ -2,7 +2,7 @@
 function signal(action: string, placement: string) {
   document.dispatchEvent(new CustomEvent('boop:interaction', {detail:{action,placement}}));
 }
-document.querySelectorAll<HTMLAnchorElement>('a[href="mailto:contato@deumboop.com.br"],a[href="#contato"]').forEach(link => {
+document.querySelectorAll<HTMLAnchorElement>('a[href="mailto:contato@deumboop.com.br"],a[href^="https://wa.me/"],a[href="#contato"]').forEach(link => {
   link.addEventListener('click',()=>signal('contact',link.closest('header')?'header':link.closest('dialog')?'menu':link.closest('#inicio')?'hero':'contact'));
 });
 document.querySelectorAll<HTMLAnchorElement>('.case-feature,.case-secondary,.case-velmont').forEach((link,index)=>link.addEventListener('click',()=>signal('case',String(index+1))));
