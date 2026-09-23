@@ -10,6 +10,8 @@ const config = {
   headers: [
     { source: '/(.*)', headers: Object.entries(securityHeaders).map(([key, value]) => ({ key, value })) },
     { source: '/404', headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }] },
+    // Keep *.vercel.app deployment URLs out of search results; only the custom domain is indexed.
+    { source: '/(.*)', has: [{ type: 'host', value: { suf: '.vercel.app' } }], headers: [{ key: 'X-Robots-Tag', value: 'noindex' }] },
   ],
 };
 const serialized = `${JSON.stringify(config, null, 2)}\n`;

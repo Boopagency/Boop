@@ -13,7 +13,7 @@ O projeto é estático. Publique `dist/`; não reescreva caminhos inexistentes p
 
 `site.config.mjs` centraliza domínio, metadados e dados da equipe. O build regenera automaticamente o hash da política de segurança em `vercel.json` a partir dele; rode `node scripts/deployment-config.mjs` manualmente só se quiser conferir o resultado antes de commitar. Os títulos/metadados, sitemap e robots são gerados pelo plugin local.
 
-O endereço canônico é `https://www.deumboop.com.br`. Na revisão de 16/09/2026 esse domínio ainda mostrava outro site. É necessário associá-lo ao projeto Vercel que recebe este repositório. Confirme HTTPS, redirecionamento do domínio sem www e a página inicial depois de associar. Não foi adicionada uma regra que redirecione prévias para a publicação antiga.
+O endereço canônico é `https://deumboop.com.br` (sem www). Na Vercel, `deumboop.com.br` deve ser o domínio de produção e `www.deumboop.com.br` deve redirecionar (308) para ele. Confirme HTTPS e a página inicial depois de associar. Qualquer URL `*.vercel.app` recebe `X-Robots-Tag: noindex` por `vercel.json`, para que apenas o domínio oficial seja indexado. A imagem de compartilhamento é `public/assets/boop-og.jpg` (JPEG, compatível com WhatsApp, LinkedIn, Facebook e X).
 
 ## Privacidade e medição
 
