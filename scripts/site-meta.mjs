@@ -34,6 +34,7 @@ export function head(page) {
   <meta property="og:description" content="${escape(page.description)}" />
   <meta property="og:url" content="${site.url}${page.path}" />
   <meta property="og:image" content="${site.url}${site.socialImage}" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1344" />
   <meta property="og:image:height" content="756" />
   <meta property="og:image:alt" content="Boop: fazemos coisas que as pessoas lembram." />

@@ -1,10 +1,10 @@
 export const site = {
   name: 'Boop',
-  url: 'https://www.deumboop.com.br',
+  url: 'https://deumboop.com.br',
   email: 'contato@deumboop.com.br',
   description: 'Consultoria de gestão de marca e crescimento. Estratégia, conteúdo, sites e tecnologia para transformar a direção do negócio em execução.',
   instagram: 'https://www.instagram.com/boop.oficial_/',
-  socialImage: '/assets/boop-construcao.webp',
+  socialImage: '/assets/boop-og.jpg',
   people: [
     { name: 'Jabez Oliveira', jobTitle: 'Fundador e CEO', image: 'founder-jabez.webp', founder: true },
     { name: 'Renatha', jobTitle: 'Fundadora e CMO', image: 'founder-renatha.webp', founder: true },

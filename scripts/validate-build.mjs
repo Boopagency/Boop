@@ -10,6 +10,7 @@ for(const page of pages){
  assert(html.includes(`<title>${page.title}</title>`));
  assert(html.includes('name="description"'));
  assert(!html.includes('<!-- SEO -->'));
+ assert(!/localhost|127\.0\.0\.1|\.vercel\.app\b/.test(html.match(/<head>[\s\S]*<\/head>/)[0]),`${page.file}: temporary host in head`);
  if(page.index)assert(html.includes(`rel="canonical" href="${site.url}${page.path}"`));
  else assert(html.includes('noindex, follow'));
  for(const img of html.matchAll(/<img\b[^>]*>/g))assert(/\balt=/.test(img[0])&&/\bwidth=/.test(img[0])&&/\bheight=/.test(img[0]),img[0]);
@@ -27,6 +28,8 @@ assert(securityHeaders['Content-Security-Policy'].includes(createHash('sha256').
 for(const person of site.people)assert(home.includes(person.name)&&home.includes(person.jobTitle));
 assert(!/<iframe\b/.test(home),'Instagram must require opt-in');
 assert(!/[↗↘]/u.test(home),'directional arrows are SVG');
+assert((await stat(`dist${site.socialImage}`)).isFile(),'social image');
+assert(home.includes(`property="og:image" content="${site.url}${site.socialImage}"`));
 const sitemap=await readFile('dist/sitemap.xml','utf8');
 assert(!sitemap.includes('404'));
 for(const page of pages.filter(p=>p.index))assert(sitemap.includes(site.url+page.path));
