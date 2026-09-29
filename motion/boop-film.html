@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boop — Olhe além</title>
+<style>
+@font-face{font-family:Poppins;font-weight:500;font-display:block;src:url(../node_modules/@fontsource/poppins/files/poppins-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-weight:600;font-display:block;src:url(../node_modules/@fontsource/poppins/files/poppins-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-weight:700;font-display:block;src:url(../node_modules/@fontsource/poppins/files/poppins-latin-700-normal.woff2) format('woff2')}
+
+:root{
+  --navy-900:#05101B;--navy:#0B1B2C;--navy-700:#12293F;--navy-600:#1B3A55;--navy-400:#4C6F8C;--navy-300:#7A95AB;--navy-200:#AFC1CE;--navy-100:#DCE4EA;
+  --ciano:#00C2FF;--ciano-300:#7AD7F4;--osso:#FFFDF5;--osso-300:#EDE9DD;--pupila:#1A1A1A;--breu:#1B171F;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+body{font-family:Poppins,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;color:var(--osso)}
+
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--navy-900);transform-origin:0 0;contain:strict}
+.scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.c{position:absolute;inset:0;transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,1))}
+.abs{position:absolute}
+.lbl{font-size:24px;line-height:1.4;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.big{font-weight:600;letter-spacing:-.065em;line-height:.8;white-space:nowrap}
+.outline{color:transparent!important;-webkit-text-stroke:var(--sw,3px) var(--sc)}
+.m{display:block;overflow:hidden;padding:0 .08em .12em;margin:0 -.08em -.12em}
+.m>span{display:block;will-change:transform}
+.sl{position:absolute;white-space:nowrap}
+.sl>span{display:block}
+.sl>.e{position:absolute;left:0;top:0;color:transparent;-webkit-text-stroke:3px var(--ec,currentColor)}
+svg{overflow:visible}
+.arrow{display:block}
+
+/* grain + flash */
+#grain{position:absolute;inset:-200px;pointer-events:none;background-image:url(../public/assets/grain.svg);background-size:180px 180px;opacity:.13;mix-blend-mode:overlay;z-index:50}
+#flash{position:absolute;inset:0;pointer-events:none;z-index:40;opacity:0}
+#black{position:absolute;inset:0;pointer-events:none;z-index:45;opacity:0;background:#000}
+
+/* S0 */
+#s0{background:var(--navy-900)}
+#s0-dot{position:absolute;left:522px;top:942px;width:36px;height:36px;border-radius:50%;background:var(--ciano)}
+.slate{position:absolute;color:var(--navy-200);opacity:0}
+
+/* S1 pedidos */
+.req{background:var(--osso);color:var(--navy)}
+.req.dark{background:var(--navy);color:var(--osso)}
+.req .quote-mark{position:absolute;left:50px;top:120px;font-size:560px;line-height:1;font-weight:600;color:var(--ciano);transform-origin:20% 30%}
+.req .big{font-size:258px}
+.req .meta{position:absolute;left:64px;right:64px;display:flex;justify-content:space-between}
+
+/* S2 virada */
+#s2{background:var(--osso);color:var(--navy)}
+.q{position:absolute;left:64px;font-size:64px;font-weight:500;letter-spacing:-.05em;line-height:1.25;opacity:0}
+.q i{position:absolute;left:-2%;right:-2%;top:55%;height:6px;background:var(--navy);transform:scaleX(0);transform-origin:left}
+#s2-q{position:absolute;left:58px;top:760px;font-size:146px;font-weight:600;letter-spacing:-.06em;line-height:.98}
+.underlined{position:relative;isolation:isolate;display:inline-block}
+.underlined i{position:absolute;left:0;bottom:.1em;height:.14em;width:100%;background:var(--ciano);z-index:-1;transform:scaleX(0);transform-origin:left}
+#s2-foot{position:absolute;left:64px;top:1500px;font-size:38px;line-height:1.35;letter-spacing:-.02em}
+
+/* S3 olhe além */
+#s3{background:transparent}
+#s3-panel{position:absolute;left:0;right:0;top:0;height:2100px;background:var(--navy)}
+#s3-panel::before{content:'';position:absolute;left:0;right:0;top:-60px;height:62px;background:var(--navy);clip-path:polygon(0 100%,0 40%,18% 100%,22% 20%,23% 100%,26% 0,29% 100%,61% 100%,64% 30%,66% 100%,100% 100%)}
+#s3-stack{position:absolute;inset:0;color:var(--osso);--sc:var(--osso)}
+#s3-stack .row{position:absolute;left:0;width:1080px;text-align:center;font-size:400px}
+#s3-hero{position:absolute;inset:0;transform-origin:0 0}
+.htitle{position:absolute;left:24px;top:170px;font-size:350px;color:var(--osso)}
+.htitle .l2{padding-left:170px}
+#s3-solid{mask-image:linear-gradient(to bottom,#000 45%,#000 60%,transparent 92%);-webkit-mask-image:linear-gradient(to bottom,#000 45%,#000 60%,transparent 92%)}
+#s3-dust{position:absolute;left:24px;top:170px;clip-path:inset(55% 0 0);-webkit-mask-image:url(../public/assets/dissolve.svg);mask-image:url(../public/assets/dissolve.svg);-webkit-mask-size:400px 240px;mask-size:400px 240px}
+#s3-obj{position:absolute;left:-40px;top:560px;width:1240px;height:1240px}
+#s3-obj img{width:100%;height:100%;display:block}
+#s3-cap{position:absolute;left:64px;top:1610px}
+#s3-cap p{margin:14px 0 0;font-size:52px;line-height:1.1;letter-spacing:-.045em;font-weight:500}
+
+/* S4 frentes */
+.world{position:absolute;inset:0;overflow:hidden}
+.world .big{font-size:450px}
+.world .top{position:absolute;left:64px;right:64px;top:110px;display:flex;justify-content:space-between}
+.world h3{position:absolute;left:64px;top:190px;margin:0;font-size:92px;font-weight:600;letter-spacing:-.05em;line-height:1}
+.world .label{position:absolute;left:64px;top:310px;font-size:34px;letter-spacing:-.01em}
+.world .desc{position:absolute;left:64px;top:1560px;font-size:46px;line-height:1.2;letter-spacing:-.03em;font-weight:500}
+.world .sign{position:absolute;right:64px;top:1560px;width:150px;height:150px;border-radius:50%;border:3px solid currentColor;display:grid;place-items:center}
+.world .sign svg{width:80px;height:80px}
+#w1{background:var(--osso);color:var(--navy);--sc:var(--navy);--ec:var(--navy)}
+#w2{background:var(--ciano);color:var(--navy);--sc:var(--navy);--ec:var(--navy)}
+#w3{background:var(--navy-700);color:var(--osso)}
+#w3 .e,#w3 .outline{--ec:var(--ciano);--sc:var(--ciano)}
+
+/* S5 conectado */
+#s5{background:var(--osso);color:var(--navy)}
+#s5 .big{font-size:170px}
+#s5-diag{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.node{position:absolute;opacity:0}
+.node .n{font-size:24px;font-weight:500;letter-spacing:.06em}
+.node h4{margin:6px 0 0;font-size:84px;font-weight:600;letter-spacing:-.055em;line-height:1}
+.node p{margin:10px 0 0;font-size:30px;letter-spacing:-.01em}
+#s5-cap{position:absolute;left:64px;top:1720px;font-size:36px;line-height:1.3;letter-spacing:-.02em}
+
+/* S6 método */
+#s6{background:var(--navy);color:var(--osso)}
+#s6-win{position:absolute;left:0;right:0;top:170px;height:720px;overflow:hidden}
+#s6-col{position:absolute;left:34px;top:0}
+#s6-col .num{position:absolute;left:0;font-size:820px;font-weight:600;letter-spacing:-.07em;line-height:.9;color:transparent;-webkit-text-stroke:3px var(--navy-400)}
+#s6-word{position:absolute;left:64px;top:960px;font-size:160px}
+#s6-desc{position:absolute;left:64px;top:1190px;font-size:40px;line-height:1.3;color:var(--navy-200);letter-spacing:-.02em}
+#s6-desc>div{position:absolute;left:0;top:0;white-space:nowrap}
+#s6-bar{position:absolute;left:64px;right:64px;top:1720px;display:flex;gap:14px}
+#s6-bar i{flex:1;height:8px;background:var(--navy-600);position:relative;overflow:hidden}
+#s6-bar i b{position:absolute;inset:0;background:var(--ciano);transform:scaleX(0);transform-origin:left}
+#s6-nada{position:absolute;left:52px;top:520px;font-size:300px;color:var(--osso)}
+#s6-nada>div{position:absolute;left:0;white-space:nowrap;opacity:0}
+
+/* S7 boop */
+#s7{background:var(--ciano);color:var(--navy)}
+#s7-lead{position:absolute;left:64px;top:300px;font-size:66px;line-height:1.12;letter-spacing:-.045em;font-weight:500}
+#s7-de{position:absolute;left:44px;top:640px;font-size:300px}
+#s7-boop{position:absolute;left:36px;top:960px;font-size:390px;display:flex;align-items:baseline}
+#s7-boop .eye{width:.64em;height:.64em;margin:0 -.01em;position:relative;top:.035em}
+#s7-cta{position:absolute;right:64px;top:1500px;display:flex;align-items:center;gap:36px}
+#s7-cta span{font-size:42px;letter-spacing:-.03em;font-weight:500}
+#s7-btn{width:200px;height:200px;border-radius:50%;border:4px solid var(--navy);display:grid;place-items:center}
+#s7-btn svg{width:110px;height:110px}
+#s7-mail{position:absolute;left:64px;top:1760px;font-size:36px;border-bottom:3px solid currentColor;padding-bottom:6px;letter-spacing:-.01em}
+
+/* S8 end */
+#s8{background:transparent}
+#s8-panel{position:absolute;left:0;right:0;top:0;height:2100px;background:var(--navy)}
+#s8-panel::before{content:'';position:absolute;left:0;right:0;top:-60px;height:62px;background:var(--navy);clip-path:polygon(0 100%,0 40%,18% 100%,22% 20%,23% 100%,26% 0,29% 100%,61% 100%,64% 30%,66% 100%,100% 100%)}
+#s8-logo{position:absolute;left:190px;top:560px;width:700px;height:488px}
+#s8-tag{position:absolute;left:0;right:0;top:1180px;text-align:center;font-size:120px}
+#s8-foot{position:absolute;left:64px;right:64px;top:1720px;display:flex;justify-content:space-between;color:var(--navy-200)}
+
+/* player */
+#ui{position:fixed;left:0;right:0;bottom:0;padding:16px 20px calc(16px + env(safe-area-inset-bottom));display:flex;gap:14px;align-items:center;background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:10;font:500 14px/1 Poppins,Arial,sans-serif;color:#FFFDF5;transition:opacity .3s}
+#ui button{appearance:none;border:1px solid rgba(255,253,245,.5);background:transparent;color:inherit;border-radius:999px;height:40px;min-width:40px;padding:0 16px;font:inherit;cursor:pointer}
+#ui button:focus-visible{outline:2px solid #00C2FF;outline-offset:3px}
+#bar{flex:1;height:4px;background:rgba(255,253,245,.25);position:relative;cursor:pointer;border-radius:999px}
+#bar b{position:absolute;left:0;top:0;bottom:0;background:#00C2FF;border-radius:999px;width:0}
+#time{font-variant-numeric:tabular-nums;min-width:84px;text-align:right}
+#cover{position:fixed;inset:0;display:grid;place-items:center;z-index:11;background:rgba(0,0,0,.35);cursor:pointer;border:0;width:100%;color:#FFFDF5;font:600 18px/1.2 Poppins,Arial,sans-serif;letter-spacing:.02em}
+#cover span{display:grid;place-items:center;width:112px;height:112px;border-radius:50%;background:#00C2FF;color:#0B1B2C;margin:0 auto 18px}
+.render #ui,.render #cover{display:none!important}
+.playing #ui{opacity:0}
+.playing:hover #ui,.playing #ui:focus-within{opacity:1}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- S0 · pupila -->
+  <section class="scene" id="s0"><div class="c">
+    <div class="slate lbl" style="left:64px;top:100px">{00}</div>
+    <div class="slate lbl" style="right:64px;top:100px">Boop — Filme 01</div>
+    <div class="slate lbl" style="left:64px;top:1740px">Consultoria de gestão<br>de marca &amp; crescimento</div>
+    <div class="slate lbl" style="right:64px;top:1774px">Olhe além.</div>
+    <div id="s0-dot"></div>
+  </div></section>
+
+  <!-- S1 · pedidos -->
+  <section class="scene req" id="s1a"><div class="c">
+    <div class="meta lbl" style="top:100px"><span>{01} O pedido</span><span>01 — 03</span></div>
+    <div class="quote-mark">“</div>
+    <div class="sl big" data-dir="-1" style="left:52px;top:700px">Preciso</div>
+    <div class="sl big" data-dir="1" style="left:52px;top:920px">de um</div>
+    <div class="sl big" data-dir="-1" style="left:52px;top:1140px">site.”</div>
+  </div></section>
+  <section class="scene req dark" id="s1b"><div class="c">
+    <div class="meta lbl" style="top:100px"><span>{01} O pedido</span><span>02 — 03</span></div>
+    <div class="quote-mark">“</div>
+    <div class="sl big" data-dir="1" style="left:52px;top:700px">Quero</div>
+    <div class="sl big" data-dir="-1" style="left:52px;top:920px">postar</div>
+    <div class="sl big" data-dir="1" style="left:52px;top:1140px">mais.”</div>
+  </div></section>
+  <section class="scene req" id="s1c"><div class="c">
+    <div class="meta lbl" style="top:100px"><span>{01} O pedido</span><span>03 — 03</span></div>
+    <div class="quote-mark">“</div>
+    <div class="sl big" data-dir="-1" style="left:52px;top:700px">Preciso</div>
+    <div class="sl big" data-dir="1" style="left:52px;top:920px">vender</div>
+    <div class="sl big" data-dir="-1" style="left:52px;top:1140px">melhor.”</div>
+  </div></section>
+
+  <!-- S2 · a virada -->
+  <section class="scene" id="s2"><div class="c">
+    <div class="lbl abs" style="left:64px;top:100px">{01} Antes da resposta, a pergunta</div>
+    <p class="q" style="top:250px;margin:0"><span>“Preciso de um site.”</span><i></i></p>
+    <p class="q" style="top:340px;margin:0"><span>“Quero postar mais.”</span><i></i></p>
+    <p class="q" style="top:430px;margin:0"><span>“Preciso vender melhor.”</span><i></i></p>
+    <svg id="s2-arrow" class="abs arrow" style="right:64px;top:250px;width:150px;height:150px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5 19 19M5 19h14V5"/></svg>
+    <h2 id="s2-q" style="margin:0"><span class="m"><span>O que precisa</span></span><span class="m"><span>mudar no seu</span></span><span class="m"><span><span class="underlined">negócio?<i></i></span></span></span></h2>
+    <div id="s2-foot"><span class="m"><span>A gente começa nessa pergunta.</span></span><span class="m"><span>A entrega vem depois da direção.</span></span></div>
+  </div></section>
+
+  <!-- S3 · olhe além -->
+  <section class="scene" id="s3">
+    <div id="s3-panel"></div>
+    <div class="c">
+      <div id="s3-stack"></div>
+      <div id="s3-hero" style="visibility:hidden">
+        <div class="htitle big" id="s3-solid"><span class="m"><span>Olhe</span></span><span class="m l2"><span>além.</span></span></div>
+        <div class="htitle big" id="s3-dust" aria-hidden="true"><span class="m"><span>Olhe</span></span><span class="m l2"><span>além.</span></span></div>
+        <div id="s3-obj"><img src="../public/assets/optical-sculpture-new.webp" alt="" /></div>
+        <div id="s3-cap"><span class="lbl m" style="color:var(--navy-200)"><span>Consultoria de gestão de marca &amp; crescimento</span></span><p><span class="m"><span>Antes da entrega,</span></span><span class="m"><span>a pergunta certa.</span></span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S4 · frentes -->
+  <section class="scene" id="s4" style="background:#000"><div class="c">
+    <div class="world" id="w1">
+      <div class="top lbl"><span>{02} O que fazemos</span><span>01 / 03</span></div>
+      <h3>Conteúdo</h3><p class="label" style="margin:0">O que a marca tem a dizer.</p>
+      <div class="sl big" data-dir="-1" style="left:-10px;top:600px">Ter</div>
+      <div class="sl big outline" data-dir="1" style="left:300px;top:960px">voz.</div>
+      <p class="desc" style="margin:0">Conteúdo e comunicação<br>com intenção.</p>
+      <span class="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5M5 5h14v14"/></svg></span>
+    </div>
+    <div class="world" id="w2">
+      <div class="top lbl"><span>{02} O que fazemos</span><span>02 / 03</span></div>
+      <h3>Digital</h3><p class="label" style="margin:0">Do primeiro olhar ao próximo clique.</p>
+      <div class="sl big" data-dir="1" style="left:-20px;top:600px">Estar</div>
+      <div class="sl big outline" data-dir="-1" style="left:180px;top:960px">aqui.</div>
+      <p class="desc" style="margin:0">Sites, e-commerce<br>e experiências digitais.</p>
+      <span class="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5M5 5h14v14"/></svg></span>
+    </div>
+    <div class="world" id="w3">
+      <div class="top lbl"><span>{02} O que fazemos</span><span>03 / 03</span></div>
+      <h3>Projetos &amp; tecnologia</h3><p class="label" style="margin:0">Quando a ideia precisa sair do papel.</p>
+      <div class="sl big" data-dir="-1" style="left:-20px;top:600px">Fazer</div>
+      <div class="sl big outline" data-dir="1" style="left:210px;top:960px">fluir.</div>
+      <p class="desc" style="margin:0">Sistemas, automações<br>e tecnologia aplicada.</p>
+      <span class="sign" style="color:var(--ciano)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5M5 5h14v14"/></svg></span>
+    </div>
+  </div></section>
+
+  <!-- S5 · tudo conectado -->
+  <section class="scene" id="s5"><div class="c">
+    <div id="s5-group" class="abs" style="inset:0">
+      <div class="lbl abs" style="left:64px;top:100px">{03} O negócio por inteiro</div>
+      <div class="big abs" id="s5-h1" style="left:52px;top:200px">Uma marca.</div>
+      <div class="big abs" style="left:52px;top:360px"><span class="m"><span>Tudo</span></span></div>
+      <div class="big abs" style="left:52px;top:520px"><span class="m"><span>conectado.</span></span></div>
+      <svg id="s5-diag" viewBox="0 0 1080 1920" fill="none" stroke="#0B1B2C" stroke-width="3" stroke-linecap="round">
+        <path class="ln" d="M540 1200 L180 900" />
+        <path class="ln" d="M540 1200 L880 1090" />
+        <path class="ln" d="M540 1200 L230 1490" />
+        <path class="tri" stroke-width="2" d="M180 900 L880 1090 L230 1490 Z" />
+      </svg>
+      <div class="node" style="left:64px;top:770px"><div class="n">01 /</div><h4>Marca.</h4></div>
+      <div class="node" style="left:640px;top:1110px"><div class="n">02 /</div><h4>Presença.</h4></div>
+      <div class="node" style="left:64px;top:1510px"><div class="n">03 /</div><h4>Operação.</h4></div>
+      <div id="s5-cap"><span class="m"><span>Quando as partes conversam, a marca faz sentido.</span></span></div>
+    </div>
+    <div id="s5-dot" class="abs" style="left:516px;top:1176px;width:48px;height:48px;border-radius:50%;background:var(--ciano)"></div>
+  </div></section>
+
+  <!-- S6 · método -->
+  <section class="scene" id="s6"><div class="c">
+    <div id="s6-method" class="abs" style="inset:0">
+      <div class="lbl abs" style="left:64px;top:100px">{06} O raciocínio antes da entrega</div>
+      <div id="s6-win"><div id="s6-col"></div></div>
+      <div class="abs" id="s6-note" style="left:64px;top:1520px;font-size:34px;line-height:1.35;color:var(--navy-200);letter-spacing:-.02em">O método organiza o caminho.<br>O negócio define a direção.</div>
+      <div id="s6-word" class="big"></div>
+      <div id="s6-desc"></div>
+      <div id="s6-bar"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+    </div>
+    <div id="s6-nada" class="big"><div style="top:0">Nada</div><div style="top:250px">por</div><div style="top:500px;color:var(--ciano)">acaso.</div></div>
+  </div></section>
+
+  <!-- S7 · dê um boop -->
+  <section class="scene" id="s7"><div class="c">
+    <div class="lbl abs" style="left:64px;top:100px">{09} A próxima conversa</div>
+    <div id="s7-lead"><span class="m"><span>Tem alguma coisa</span></span><span class="m"><span>que precisa andar?</span></span></div>
+    <div id="s7-de" class="big">Dê um</div>
+    <div id="s7-boop" class="big"><span>b</span><svg class="eye" id="eyeL" viewBox="-75 -75 150 150"></svg><svg class="eye" id="eyeR" viewBox="-75 -75 150 150"></svg><span>p.</span></div>
+    <div id="s7-cta"><span>Vamos conversar</span><div id="s7-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5M5 5h14v14"/></svg></div></div>
+    <div id="s7-mail">contato@deumboop.com.br</div>
+  </div></section>
+
+  <!-- S8 · assinatura -->
+  <section class="scene" id="s8">
+    <div id="s8-panel"></div>
+    <div class="c">
+      <svg id="s8-logo" viewBox="0 0 268 187" fill="none">
+        <defs>
+          <linearGradient id="g-horn" x1="215.3" y1="16" x2="215.3" y2="67.8" gradientUnits="userSpaceOnUse"><stop stop-color="#00C2FF"/><stop offset="1" stop-color="#1B171F"/></linearGradient>
+          <linearGradient id="g-ring" x1="72" y1="41" x2="72" y2="187" gradientUnits="userSpaceOnUse"><stop stop-color="#00C2FF"/><stop offset="1" stop-color="#1B171F"/></linearGradient>
+        </defs>
+        <path id="lg-crown" d="M76.735 27.7407L71.0085 48.5463C71.0085 48.5463 85.8974 47.3904 101.932 55.4815C117.966 63.5725 132.855 84.3781 132.855 84.3781C132.855 84.3781 147.744 64.7284 154.615 60.1049C161.487 55.4815 185.538 48.5463 185.538 48.5463V32.3642L168.359 42.767L177.521 19.6497L160.342 32.3642V19.6497L146.598 32.3642L142.017 0L111.094 38.1435L101.932 10.4028L87.0427 38.1435L76.735 27.7407Z" fill="#FFFDF5"/>
+        <g id="lg-eyeL">
+          <path d="M144.308 114.024C144.308 154.328 112.003 187 72.1538 187C32.3044 187 0 154.328 0 114.024C0 73.7211 32.3044 41.0488 72.1538 41.0488C112.003 41.0488 144.308 73.7211 144.308 114.024ZM38.9631 114.024C38.9631 132.564 53.8231 147.593 72.1538 147.593C90.4846 147.593 105.345 132.564 105.345 114.024C105.345 95.4849 90.4846 80.4556 72.1538 80.4556C53.8231 80.4556 38.9631 95.4849 38.9631 114.024Z" fill="url(#g-ring)"/>
+          <g class="lid" style="transform-origin:72.15px 114px"><ellipse cx="72.1538" cy="114.024" rx="27.4872" ry="27.3659" fill="#FFFDF5"/><g class="pupil"><ellipse cx="79.0256" cy="111.744" rx="16.0342" ry="15.9634" fill="#1A1A1A"/><ellipse cx="73.2991" cy="106.043" rx="5.7265" ry="5.70122" fill="#FFFDF5"/></g></g>
+        </g>
+        <g id="lg-eyeR">
+          <path d="M268 114.024C268 154.328 236.208 187 196.991 187C157.775 187 125.983 154.328 125.983 114.024C125.983 73.7211 157.775 41.0488 196.991 41.0488C236.208 41.0488 268 73.7211 268 114.024ZM164.328 114.024C164.328 132.564 178.952 147.593 196.991 147.593C215.031 147.593 229.655 132.564 229.655 114.024C229.655 95.4849 215.031 80.4556 196.991 80.4556C178.952 80.4556 164.328 95.4849 164.328 114.024Z" fill="#00C2FF"/>
+          <g class="lid" style="transform-origin:197px 114px"><ellipse cx="196.99" cy="114.32" rx="27.4872" ry="27.3659" fill="#FFFDF5"/><g class="pupil"><ellipse cx="203.863" cy="111.744" rx="16.0342" ry="15.9634" fill="#1A1A1A"/><ellipse cx="198.137" cy="106.043" rx="5.7265" ry="5.70122" fill="#FFFDF5"/></g></g>
+        </g>
+        <path id="lg-horn" d="M196.991 56.2953C209.733 67.2608 217.776 69.7502 233.641 67.8187L232.808 54.8549L231.975 41.8911L231.142 28.9273L230.309 15.9634L221.98 26.0464L213.65 36.1294L205.321 46.2124L196.991 56.2953Z" fill="url(#g-horn)"/>
+      </svg>
+      <div id="s8-tag" class="big"><span class="m"><span>Olhe além.</span></span></div>
+      <div id="s8-foot" class="lbl"><span>deumboop.com.br</span><span>@boop.oficial_</span></div>
+    </div>
+  </section>
+
+  <div id="flash"></div>
+  <div id="black"></div>
+  <div id="grain"></div>
+</div>
+
+<button id="cover" type="button" aria-label="Assistir ao filme com som"><div><span><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>Assistir com som</div></button>
+<div id="ui">
+  <button id="play" type="button" aria-label="Pausar">❚❚</button>
+  <button id="restart" type="button" aria-label="Recomeçar">↺</button>
+  <div id="bar" role="slider" aria-label="Posição do filme" aria-valuemin="0" aria-valuemax="33" tabindex="0"><b></b></div>
+  <span id="time">0:00 / 0:33</span>
+</div>
+
+<script>
+'use strict';
+/* =========================================================
+   BOOP — "Olhe além."  · filme de motion design 9:16
+   Tudo é função pura do tempo t (segundos): seek(t) desenha
+   o quadro. A mesma linha do tempo guia a trilha sonora.
+   120 BPM · 1 tempo = 0,5 s
+   ========================================================= */
+const DUR = 33.5;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+/* ---------- matemática ---------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  lin: p => p,
+  outExpo: p => p >= 1 ? 1 : 1 - Math.pow(2, -10 * p),
+  inExpo: p => p <= 0 ? 0 : Math.pow(2, 10 * p - 10),
+  inOutExpo: p => p <= 0 ? 0 : p >= 1 ? 1 : p < .5 ? Math.pow(2, 20 * p - 10) / 2 : (2 - Math.pow(2, -20 * p + 10)) / 2,
+  outCubic: p => 1 - Math.pow(1 - p, 3),
+  inCubic: p => p * p * p,
+  inOutCubic: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  outQuart: p => 1 - Math.pow(1 - p, 4),
+  inQuart: p => p * p * p * p,
+  inOutQuart: p => p < .5 ? 8 * p * p * p * p : 1 - Math.pow(-2 * p + 2, 4) / 2,
+  outBack: p => { const s = 1.9; return 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2); },
+};
+const tw = (t, a, b, from, to, e = E.outExpo) => lerp(from, to, e(P(t, a, b)));
+const bump = (t, t0, d = .28) => { const k = P(t, t0, t0 + d); return k <= 0 || k >= 1 ? 0 : Math.sin(k * Math.PI) * (1 - k); };
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; }; }
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; };
+const vis = (el, on) => { el.style.visibility = on ? 'visible' : 'hidden'; };
+
+/* ---------- impactos: tremor de câmera, flashes ---------- */
+const HITS = [[1.5,10],[2.5,10],[3.5,10],[9.5,14],[10.5,12],[11,20],[14,22],[15.5,12],[17,12],[18.5,12],[22,14],[24.5,10],[24.75,10],[25,14],[26,16],[26.5,28],[30,10]];
+function shake(t) {
+  let x = 0, y = 0, s = 0;
+  HITS.forEach(([h, a], i) => {
+    const d = t - h; if (d < 0 || d > .6) return;
+    const env = a * Math.exp(-d * 9);
+    x += env * Math.sin(d * 58 + i * 1.7); y += env * Math.cos(d * 47 + i * 2.3) * .8;
+    s += a / 700 * Math.exp(-d * 12);
+  });
+  return { x, y, s: 1 + s };
+}
+const FLASHES = [[1.5,'#FFFDF5',.9],[9.5,'#FFFDF5',.5],[11,'#00C2FF',.55],[14,'#FFFDF5',.35],[17,'#FFFDF5',.9],[22,'#00C2FF',.6],[26.5,'#FFFDF5',.7],[30,'#00C2FF',.4]];
+
+/* ---------- linhas que entram com rastro ---------- */
+function prepSlam(el) {
+  const txt = el.textContent; el.textContent = '';
+  for (let j = 3; j >= 1; j--) { const e = document.createElement('span'); e.className = 'e'; e.textContent = txt; el.appendChild(e); }
+  const s = document.createElement('span'); s.className = 's'; s.textContent = txt; el.appendChild(s);
+  el._parts = [...el.children].reverse(); // [solid, e1, e2, e3]
+}
+function slam(el, t, t0, { dist = 1500, dur = .55, drift = 0 } = {}) {
+  const dir = +el.dataset.dir || 1;
+  if (t < t0) { el.style.opacity = 0; return; }
+  el.style.opacity = 1;
+  const d = (t - t0) * drift * dir;
+  el._parts.forEach((p, j) => {
+    const lag = j * .045;
+    const k = E.outExpo(P(t, t0 + lag, t0 + lag + dur));
+    const x = dir * dist * (1 - k) + d;
+    const sk = -dir * 22 * (1 - k);
+    p.style.transform = `translateX(${x}px) skewX(${sk}deg)`;
+    if (j) p.style.opacity = (1 - P(t, t0 + .12, t0 + .55)) * [0, .7, .45, .25][j];
+  });
+}
+/* revela uma linha mascarada: [0..1] */
+const reveal = (m, t, t0, dur = .6, from = 110) => { m.firstElementChild.style.transform = `translateY(${from * (1 - E.outExpo(P(t, t0, t0 + dur)))}%)`; };
+
+/* ---------- olhos (o "oo" do boop) ---------- */
+const RING = 'M72 0A72 72 0 1 1 -72 0A72 72 0 1 1 72 0ZM33.2 0A33.2 33.2 0 1 0 -33.2 0A33.2 33.2 0 1 0 33.2 0Z';
+function buildEye(svg, horn) {
+  svg.innerHTML = `${horn ? '<defs><linearGradient id="gh" x1="0" y1="-98" x2="0" y2="-46" gradientUnits="userSpaceOnUse"><stop stop-color="#00C2FF"/><stop offset="1" stop-color="#1B171F"/></linearGradient></defs><path d="M0 -57.7C12.7 -46.8 20.8 -44.3 36.6 -46.2L33.3 -98Z" fill="url(#gh)"/>' : ''}
+    <path d="${RING}" fill="#0B1B2C" fill-rule="evenodd"/>
+    <g class="lid"><circle r="27.5" fill="#FFFDF5"/><g class="pupil"><circle cx="6.9" cy="-2.3" r="16" fill="#1A1A1A"/><circle cx="1.1" cy="-8" r="5.7" fill="#FFFDF5"/></g></g>`;
+}
+function look(t, keys) { // keys: [t, x, y] com transição outExpo de .22s
+  let x = keys[0][1], y = keys[0][2];
+  for (let i = 1; i < keys.length; i++) { const k = E.outExpo(P(t, keys[i][0], keys[i][0] + .22)); x = lerp(x, keys[i][1], k); y = lerp(y, keys[i][2], k); }
+  return [x, y];
+}
+const blink = (t, times) => times.reduce((v, b) => { const k = P(t, b, b + .16); return k > 0 && k < 1 ? Math.min(v, Math.abs(Math.cos(k * Math.PI))) : v; }, 1);
+
+/* =========================================================
+   CENAS
+   ========================================================= */
+const scenes = [];
+const scene = (id, a, b, fn) => scenes.push({ el: $('#' + id), a, b, fn });
+
+/* S0 · 0–1.5 · a pupila */
+scene('s0', 0, 1.5, t => {
+  const dot = $('#s0-dot');
+  let s = t < .25 ? 0 : tw(t, .25, .55, 0, 1, E.outBack);
+  s *= 1 + .4 * bump(t, .5, .22) + .25 * bump(t, .62, .2) + .4 * bump(t, 1, .22) + .25 * bump(t, 1.12, .2);
+  s *= lerp(1, 72, E.inExpo(P(t, 1.18, 1.5)));
+  dot.style.transform = `scale(${s})`;
+  $$('.slate').forEach((el, i) => { el.style.opacity = tw(t, .1 + i * .05, .6 + i * .05, 0, .7, E.outCubic) * (1 - P(t, 1.05, 1.25)); });
+});
+
+/* S1 · 1.5–4.5 · três pedidos, um por tempo forte */
+[['s1a', 1.5], ['s1b', 2.5], ['s1c', 3.5]].forEach(([id, t0]) => {
+  scene(id, t0, t0 + 1, t => {
+    const sc = $('#' + id);
+    $$('.sl', sc).forEach((el, i) => slam(el, t, t0 + i * .07, { drift: 26 }));
+    const q = $('.quote-mark', sc);
+    const k = E.outBack(P(t, t0, t0 + .4));
+    q.style.transform = `scale(${k}) rotate(${(1 - k) * -40}deg)`;
+    $('.meta', sc).style.opacity = P(t, t0 + .05, t0 + .25);
+  });
+});
+
+/* S2 · 4.5–9.5 · os pedidos riscados e a pergunta */
+scene('s2', 4.5, 9.5, t => {
+  const sc = $('#s2');
+  $$('.q', sc).forEach((q, i) => {
+    const a = 4.5 + i * .06;
+    q.style.opacity = tw(t, a, a + .4, 0, .65, E.outCubic) * (1 - P(t, 7.2, 7.8) * .6);
+    q.style.transform = `translateY(${tw(t, a, a + .5, 50, 0)}px)`;
+    $('i', q).style.transform = `scaleX(${tw(t, 4.75 + i * .125, 4.75 + i * .125 + .16, 0, 1, E.outCubic)})`;
+  });
+  const ar = $('#s2-arrow');
+  ar.style.transform = `rotate(${tw(t, 5.05, 5.6, -180, 0)}deg) scale(${tw(t, 5.05, 5.4, 0, 1, E.outBack)})`;
+  $$('#s2-q .m', sc).forEach((m, i) => reveal(m, t, 5.5 + i * .12, .7));
+  $('#s2-q .underlined i').style.transform = `scaleX(${tw(t, 6.45, 6.85, 0, 1)})`;
+  $$('#s2-foot .m', sc).forEach((m, i) => reveal(m, t, 7.05 + i * .1, .7));
+  // empurrão lento de câmera; saída acelerada para cima
+  const c = $('.c', sc);
+  const push = lerp(1, 1.07, E.inOutCubic(P(t, 5.5, 9.1)));
+  const up = tw(t, 9.0, 9.5, 0, -700, E.inQuart);
+  c.style.transformOrigin = '30% 55%';
+  c.style.transform = `translate(var(--sx),calc(var(--sy) + ${up}px)) scale(${push})`;
+});
+
+/* S3 · 9.0–14.0 · olhe além → dentro do olho */
+const stack = $('#s3-stack');
+const ROWS = [];
+for (let k = -4; k <= 4; k++) {
+  const r = document.createElement('div');
+  r.className = 'row big' + (k ? ' outline' : '');
+  r.style.setProperty('--sw', '2.5px');
+  r.textContent = 'Olhe';
+  stack.appendChild(r); ROWS.push([k, r]);
+}
+// posição da pupila esquerda na escultura (fração da imagem)
+const PUPIL = [0.333, 0.518];
+scene('s3', 9.0, 14.0, t => {
+  $('#s3-panel').style.transform = `translateY(${tw(t, 9.0, 9.5, 2000, 0, E.inOutQuart)}px)`;
+  const stackOn = t >= 9.5 && t < 11;
+  vis(stack, stackOn);
+  if (stackOn) {
+    const word = t < 10.5 ? 'Olhe' : 'além.';
+    const rowH = lerp(560, 330, E.outExpo(P(t, 9.5, 10.2)));
+    const scroll = (t - 9.5) * (t < 10.5 ? -150 : 150);
+    const flip = t >= 10.5 ? Math.floor((t - 10.5) / .125) % 2 : -1;
+    ROWS.forEach(([k, r]) => {
+      if (r.textContent !== word) r.textContent = word;
+      const t0 = (t < 10.5 ? 9.5 : 10.5) + Math.abs(k) * .03;
+      const dir = (k % 2 ? -1 : 1) * (t < 10.5 ? 1 : -1);
+      const x = dir * 1300 * (1 - E.outExpo(P(t, t0, t0 + .5)));
+      const y = 960 - 160 + k * rowH + scroll % rowH;
+      const solid = flip < 0 ? k === 0 : (Math.abs(k) % 2 === flip);
+      r.classList.toggle('outline', !solid);
+      r.style.color = solid && t >= 10.5 && k === 0 ? 'var(--ciano)' : '';
+      r.style.opacity = t < t0 ? 0 : (solid ? 1 : clamp(1 - Math.abs(k) * .16));
+      r.style.transform = `translate(${x}px, ${y}px)`;
+      r.style.top = '0';
+    });
+  }
+  const hero = $('#s3-hero');
+  vis(hero, t >= 11);
+  if (t >= 11) {
+    $$('.htitle .m').forEach((m, i) => reveal(m, t, 11 + (i % 2) * .08, .6));
+    $('#s3-dust').style.webkitMaskPosition = $('#s3-dust').style.maskPosition = `${Math.floor(t * 12) * 37 % 400}px ${Math.floor(t * 12) * 23 % 240}px`;
+    const obj = $('#s3-obj');
+    const k = E.outExpo(P(t, 11, 12.2));
+    const calm = 1 - P(t, 12.3, 12.7);
+    const fy = Math.sin((t - 11) * 2.2) * 12 * calm;
+    const rot = lerp(-32, -7, k) + Math.sin((t - 11) * 1.4) * 1.2 * calm;
+    const sc = lerp(.72, 1, k);
+    const ty = lerp(1300, 0, k) + fy;
+    obj.style.transform = `translateY(${ty}px) rotate(${rot}deg) scale(${sc})`;
+    $$('#s3-cap .m').forEach((m, i) => reveal(m, t, 11.55 + i * .08, .6));
+    $('#s3-cap').style.opacity = 1 - P(t, 12.5, 12.85);
+    // mergulho na pupila
+    const W = 1240, cx = -40 + W / 2, cy = 560 + W / 2 + ty;
+    const a = rot * Math.PI / 180, dx = (PUPIL[0] - .5) * W * sc, dy = (PUPIL[1] - .5) * W * sc;
+    const px = cx + dx * Math.cos(a) - dy * Math.sin(a), py = cy + dx * Math.sin(a) + dy * Math.cos(a);
+    const z = lerp(1, 70, E.inExpo(P(t, 12.65, 13.95)));
+    hero.style.transformOrigin = `${px}px ${py}px`;
+    hero.style.transform = `translate(${(540 - px) * E.inOutCubic(P(t, 12.4, 13.4))}px, ${(960 - py) * E.inOutCubic(P(t, 12.4, 13.4))}px) scale(${z})`;
+  }
+});
+
+/* S4 · 14.0–18.5 · frentes: ter voz, estar aqui, fazer fluir */
+scene('s4', 14.0, 18.5, t => {
+  const w1 = $('#w1'), w2 = $('#w2'), w3 = $('#w3');
+  // abertura em íris a partir do preto da pupila
+  const r = tw(t, 14.0, 14.55, 0, 1200);
+  w1.style.clipPath = `circle(${r}px at 540px 960px)`;
+  vis(w1, t < 15.8); vis(w2, t >= 15.5 && t < 17); vis(w3, t >= 17);
+  const wy = tw(t, 15.5, 15.8, 1920, 0, E.outQuart);
+  w2.style.transform = `translateY(${wy}px)`;
+  w1.style.transform = `translateY(${tw(t, 15.5, 15.8, 0, -420, E.outQuart)}px)`;
+  [[w1, 14.08], [w2, 15.55], [w3, 17.0]].forEach(([w, t0]) => {
+    $$('.sl', w).forEach((el, i) => slam(el, t, t0 + i * .1, { drift: 55, dist: 1400 }));
+    $('h3', w).style.transform = `translateY(${tw(t, t0, t0 + .5, 60, 0)}px)`;
+    $('h3', w).style.opacity = P(t, t0, t0 + .2);
+    $('.label', w).style.opacity = P(t, t0 + .1, t0 + .35);
+    $('.top', w).style.opacity = P(t, t0, t0 + .2);
+    $('.desc', w).style.transform = `translateY(${tw(t, t0 + .2, t0 + .8, 80, 0)}px)`;
+    $('.desc', w).style.opacity = P(t, t0 + .2, t0 + .45);
+    const sg = $('.sign', w);
+    sg.style.transform = `rotate(${tw(t, t0 + .3, t0 + .9, -135, 0)}deg) scale(${tw(t, t0 + .3, t0 + .7, 0, 1, E.outBack)})`;
+  });
+});
+
+/* S5 · 18.5–22.0 · uma marca, tudo conectado */
+const lines = $$('#s5-diag .ln'), tri = $('#s5-diag .tri');
+[...lines, tri].forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p._L = L; });
+scene('s5', 18.5, 22.0, t => {
+  const h1 = $('#s5-h1');
+  const k = E.outExpo(P(t, 18.5, 18.85));
+  h1.style.transform = `scale(${lerp(1.5, 1, k)})`; h1.style.transformOrigin = '0 50%';
+  h1.style.opacity = P(t, 18.5, 18.56);
+  $$('#s5 .big .m').forEach((m, i) => reveal(m, t, 18.95 + i * .1, .6));
+  lines.forEach((p, i) => { p.style.strokeDashoffset = p._L * (1 - E.outCubic(P(t, 19.5 + i * .25, 19.8 + i * .25))); });
+  tri.style.strokeDashoffset = tri._L * (1 - E.inOutCubic(P(t, 20.3, 20.9)));
+  tri.style.opacity = .35;
+  $$('#s5 .node').forEach((n, i) => {
+    const a = 19.7 + i * .25;
+    n.style.opacity = P(t, a, a + .15);
+    n.style.transform = `translateY(${tw(t, a, a + .5, 40, 0)}px)`;
+  });
+  reveal($('#s5-cap .m'), t, 20.6, .6);
+  // tudo converge para o ponto; o ponto engole o quadro
+  const g = $('#s5-group');
+  const col = E.inExpo(P(t, 21.2, 21.7));
+  g.style.transformOrigin = '540px 1200px';
+  g.style.transform = `scale(${1 - col}) rotate(${col * 40}deg)`;
+  g.style.opacity = 1 - P(t, 21.55, 21.7);
+  const dot = $('#s5-dot');
+  let ds = t < 19.3 ? 0 : tw(t, 19.3, 19.6, 0, 1, E.outBack);
+  ds *= 1 + .5 * bump(t, 21.7, .15);
+  ds *= lerp(1, 55, E.inExpo(P(t, 21.72, 22.0)));
+  dot.style.transform = `scale(${ds})`;
+});
+
+/* S6 · 22.0–25.5 · método em contagem; nada por acaso */
+const STEPS = [['01', 'Entender', 'Escutar o pedido. Conhecer o negócio.'], ['02', 'Diagnosticar', 'Encontrar o que trava o próximo passo.'], ['03', 'Direcionar', 'Definir prioridades. Escolher o caminho.'], ['04', 'Construir', 'Colocar a estratégia no mundo.'], ['05', 'Medir', 'Ler o que aconteceu. Ajustar a direção.']];
+const ROWH = 740;
+STEPS.forEach(([n, w, d], i) => {
+  const num = document.createElement('div'); num.className = 'num'; num.textContent = n; num.style.top = i * ROWH + 'px'; $('#s6-col').appendChild(num);
+  const m = document.createElement('span'); m.className = 'm'; m.innerHTML = `<span>${w}</span>`; m.style.position = 'absolute'; m.style.top = '0'; $('#s6-word').appendChild(m);
+  const dd = document.createElement('div'); dd.textContent = d; $('#s6-desc').appendChild(dd);
+});
+scene('s6', 22.0, 25.5, t => {
+  let f = 0; for (let i = 1; i < 5; i++) f += E.outExpo(P(t, 22 + i * .5, 22.35 + i * .5));
+  const enter = E.outExpo(P(t, 22.0, 22.4));
+  $('#s6-col').style.transform = `translateY(${-40 - f * ROWH + (1 - enter) * 700}px)`;
+  $('#s6-note').style.opacity = P(t, 22.4, 22.7);
+  $$('#s6-col .num').forEach((n, i) => {
+    const a = clamp(1 - Math.abs(i - f) * 1.6);
+    n.style.color = `rgba(0,194,255,${a})`;
+    n.style.webkitTextStroke = `3px rgba(76,111,140,${1 - a})`;
+  });
+  const idx = Math.round(f);
+  $$('#s6-word .m').forEach((m, i) => {
+    const ti = 22 + i * .5;
+    const inn = i === 0 ? E.outExpo(P(t, 22.05, 22.5)) : E.outExpo(P(t, ti, ti + .35));
+    const out = i < 4 ? E.inQuart(P(t, ti + .38, ti + .5)) : 0;
+    m.firstElementChild.style.transform = `translateY(${(1 - inn) * 140 - out * 140}%)`;
+  });
+  $$('#s6-desc div').forEach((d, i) => { d.style.opacity = i === idx ? P(t, 22 + i * .5 + .05, 22 + i * .5 + .2) : 0; });
+  $$('#s6-bar b').forEach((b, i) => { b.style.transform = `scaleX(${E.outExpo(P(t, 22 + i * .5, 22.3 + i * .5))})`; });
+  const m = $('#s6-method');
+  m.style.transform = `translateY(${tw(t, 24.3, 24.5, 0, -1920, E.inQuart)}px)`;
+  vis(m, t < 24.5);
+  $$('#s6-nada div').forEach((d, i) => {
+    const a = 24.5 + i * .25;
+    const k = E.outExpo(P(t, a, a + .3));
+    d.style.opacity = t >= a ? 1 : 0;
+    d.style.transform = `scale(${lerp(1.7, 1, k)})`; d.style.transformOrigin = '0 60%';
+  });
+  // estroboscópio antes da virada
+  const strobe = t >= 25.25 ? Math.floor((t - 25.25) / .0625) % 2 : 0;
+  $('#s6').style.background = strobe ? 'var(--ciano)' : 'var(--navy)';
+  $('#s6-nada').style.color = strobe ? 'var(--navy)' : '';
+  $('#s6-nada div:last-child').style.color = strobe ? 'var(--navy)' : 'var(--ciano)';
+});
+
+/* S7 · 25.5–30.0 · dê um boop */
+buildEye($('#eyeL'), false); buildEye($('#eyeR'), true);
+scene('s7', 25.5, 30.0, t => {
+  $$('#s7-lead .m').forEach((m, i) => reveal(m, t, 25.5 + i * .1, .6));
+  $('#s7-lead').style.opacity = 1 - P(t, 25.95, 26.0) * .0;
+  const de = $('#s7-de');
+  de.style.opacity = t >= 26 ? 1 : 0;
+  de.style.transform = `scale(${lerp(1.8, 1, E.outExpo(P(t, 26, 26.3)))})`; de.style.transformOrigin = '0 70%';
+  const bp = $('#s7-boop');
+  bp.style.opacity = t >= 26.5 ? 1 : 0;
+  const kb = E.outExpo(P(t, 26.5, 26.85));
+  bp.style.transform = `scale(${lerp(2.4, 1, kb)}) rotate(${lerp(-6, 0, kb)}deg)`; bp.style.transformOrigin = '50% 70%';
+  // olhares e piscadas
+  const [lx, ly] = look(t, [[0, 0, 0], [27.1, -9, 2], [27.7, 9, -3], [28.3, 0, 6], [29.1, 4, -1]]);
+  const bl = blink(t, [28.7, 28.95]);
+  $$('#s7 .pupil').forEach(p => p.setAttribute('transform', `translate(${lx} ${ly})`));
+  $$('#s7 .lid').forEach(l => l.setAttribute('transform', `scale(1 ${Math.max(.04, bl)})`));
+  $$('#s7 .eye').forEach((e, i) => { const k = E.outBack(P(t, 26.55 + i * .06, 26.95 + i * .06)); e.style.transform = `scale(${k})`; });
+  const cta = $('#s7-cta');
+  cta.style.opacity = P(t, 27.3, 27.45);
+  const btn = $('#s7-btn');
+  const hv = E.outExpo(P(t, 28.4, 28.8));
+  btn.style.transform = `scale(${tw(t, 27.3, 27.7, 0, 1, E.outBack)}) rotate(${hv * 45}deg)`;
+  btn.style.background = hv > .02 ? `rgba(11,27,44,${hv})` : 'transparent';
+  btn.style.color = hv > .5 ? 'var(--ciano)' : 'var(--navy)';
+  $('#s7-mail').style.opacity = P(t, 27.55, 27.75);
+  $('#s7-mail').style.transform = `translateY(${tw(t, 27.55, 28, 30, 0)}px)`;
+});
+
+/* S8 · 29.5–33.5 · assinatura */
+scene('s8', 29.5, DUR, t => {
+  $('#s8-panel').style.transform = `translateY(${tw(t, 29.5, 29.98, 2000, 0, E.inOutQuart)}px)`;
+  const logo = $('#s8-logo');
+  logo.style.opacity = t >= 30 ? 1 : 0;
+  const k = E.outExpo(P(t, 30, 30.8));
+  logo.style.transform = `translateY(${lerp(120, 0, k)}px) scale(${lerp(.6, 1, k)})`;
+  const cr = $('#lg-crown'), hr = $('#lg-horn');
+  cr.style.transformOrigin = '128px 84px'; cr.style.transformBox = 'view-box';
+  cr.style.transform = `scaleY(${E.outBack(P(t, 30.2, 30.6))})`;
+  hr.style.transformOrigin = '197px 56px'; hr.style.transformBox = 'view-box';
+  hr.style.transform = `scale(${E.outBack(P(t, 30.35, 30.7))})`;
+  const [lx, ly] = look(t, [[0, -5, 3], [30.9, 5, -2], [31.6, 0, 0]]);
+  const bl = blink(t, [32.1]);
+  $$('#s8-logo .pupil').forEach(p => p.setAttribute('transform', `translate(${lx} ${ly})`));
+  $$('#s8-logo .lid').forEach(l => l.style.transform = `scaleY(${Math.max(.05, bl)})`);
+  reveal($('#s8-tag .m'), t, 30.45, .7);
+  $('#s8-foot').style.opacity = P(t, 30.9, 31.2);
+});
+
+/* ---------- desenho do quadro ---------- */
+const stageEl = $('#stage'), flashEl = $('#flash'), blackEl = $('#black'), grainEl = $('#grain');
+$$('.sl').forEach(prepSlam);
+function seek(t) {
+  t = clamp(t, 0, DUR - 1e-6);
+  const sh = shake(t);
+  stageEl.style.setProperty('--sx', sh.x.toFixed(2) + 'px');
+  stageEl.style.setProperty('--sy', sh.y.toFixed(2) + 'px');
+  stageEl.style.setProperty('--ss', sh.s.toFixed(4));
+  for (const s of scenes) {
+    const on = t >= s.a && t < s.b;
+    vis(s.el, on);
+    if (on) s.fn(t);
+  }
+  // flash de 2–3 quadros nos cortes mais fortes
+  let fo = 0, fc = '#FFFDF5';
+  for (const [h, c, a] of FLASHES) { const d = t - h; if (d >= 0 && d < .1) { fo = a * (1 - d / .1); fc = c; } }
+  flashEl.style.opacity = fo; flashEl.style.background = fc;
+  // preto: entrada na pupila e fim do filme
+  blackEl.style.opacity = Math.max(P(t, 13.7, 13.95) * (t < 14 ? 1 : 0), P(t, 32.9, 33.4));
+  // grão vivo (24 qps)
+  const g = rng(Math.floor(t * 24) + 7);
+  grainEl.style.transform = `translate(${Math.floor(g() * 180)}px, ${Math.floor(g() * 180)}px)`;
+}
+window.seek = seek;
+window.DUR = DUR;
+
+/* =========================================================
+   TRILHA — síntese determinística (OfflineAudioContext)
+   ========================================================= */
+async function renderAudio(sr = 48000) {
+  const ac = new OfflineAudioContext(2, Math.ceil(DUR * sr), sr);
+  const R = rng(1984);
+  const noise = ac.createBuffer(1, sr * 3, sr);
+  { const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = R() * 2 - 1; }
+
+  const comp = ac.createDynamicsCompressor();
+  comp.threshold.value = -16; comp.ratio.value = 4; comp.attack.value = .003; comp.release.value = .18; comp.knee.value = 8;
+  const master = ac.createGain(); master.gain.value = .9;
+  master.connect(comp); comp.connect(ac.destination);
+  // silêncio antes do impacto em 14 s e fade final
+  master.gain.setValueAtTime(.9, 13.9); master.gain.linearRampToValueAtTime(0, 13.93); master.gain.setValueAtTime(0, 13.995); master.gain.setValueAtTime(.9, 14.0);
+  master.gain.setValueAtTime(.9, 32.4); master.gain.linearRampToValueAtTime(0, 33.45);
+
+  // reverb com resposta gerada
+  const verb = ac.createConvolver();
+  { const L = sr * 2.6, ir = ac.createBuffer(2, L, sr); for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < L; i++) d[i] = (R() * 2 - 1) * Math.pow(1 - i / L, 3.2); } verb.buffer = ir; }
+  const verbGain = ac.createGain(); verbGain.gain.value = .32; verb.connect(verbGain); verbGain.connect(master);
+
+  const out = (node, vol, pan = 0, send = 0) => {
+    const g = ac.createGain(); g.gain.value = vol; node.connect(g);
+    const p = ac.createStereoPanner(); p.pan.value = pan; g.connect(p); p.connect(master);
+    if (send) { const s = ac.createGain(); s.gain.value = send; g.connect(s); s.connect(verb); }
+    return g;
+  };
+  const env = (g, t, a, peak, dec, end = .0001) => { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(end, t + a + dec); };
+  const nsrc = (t, dur, off = 0) => { const s = ac.createBufferSource(); s.buffer = noise; s.start(t, off % 2.5, dur); return s; };
+
+  const kick = (t, v = 1, f0 = 150, f1 = 42, dec = .42) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + .11);
+    env(g, t, .002, v, dec); o.connect(g); out(g, 1); o.start(t); o.stop(t + dec + .05);
+    const n = nsrc(t, .02, t * 3.1), hp = ac.createBiquadFilter(), gn = ac.createGain();
+    hp.type = 'highpass'; hp.frequency.value = 2500; env(gn, t, .001, v * .35, .015); n.connect(hp); hp.connect(gn); out(gn, 1);
+  };
+  const sub = (t, v = 1, dur = 1.8, f = 46) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(f * 1.6, t); o.frequency.exponentialRampToValueAtTime(f, t + .25);
+    env(g, t, .004, v, dur); o.connect(g); out(g, 1); o.start(t); o.stop(t + dur + .1);
+  };
+  const clap = (t, v = 1, pan = 0) => {
+    const n = nsrc(t, .3, t * 1.7), bp = ac.createBiquadFilter(), g = ac.createGain();
+    bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = .9;
+    g.gain.setValueAtTime(0, t);
+    [0, .011, .022].forEach(o => { g.gain.linearRampToValueAtTime(v, t + o + .001); g.gain.exponentialRampToValueAtTime(v * .2, t + o + .009); });
+    g.gain.exponentialRampToValueAtTime(.0001, t + .24);
+    n.connect(bp); bp.connect(g); out(g, 1, pan, .5);
+  };
+  const hat = (t, v = .25, dec = .035, pan = .2) => {
+    const n = nsrc(t, dec + .02, t * 2.9), hp = ac.createBiquadFilter(), g = ac.createGain();
+    hp.type = 'highpass'; hp.frequency.value = 8200; env(g, t, .001, v, dec); n.connect(hp); hp.connect(g); out(g, 1, pan);
+  };
+  const crash = (t, v = .5, dec = 1.8) => {
+    const n = nsrc(t, dec + .1, t * 1.3), hp = ac.createBiquadFilter(), g = ac.createGain();
+    hp.type = 'highpass'; hp.frequency.value = 4500; env(g, t, .002, v, dec); n.connect(hp); hp.connect(g); out(g, 1, 0, .6);
+  };
+  const whoosh = (t0, t1, v = .5, up = true, f0 = 250, f1 = 6000) => {
+    const n = nsrc(t0, t1 - t0 + .05, t0 * 1.9), bp = ac.createBiquadFilter(), g = ac.createGain();
+    bp.type = 'bandpass'; bp.Q.value = 1.6;
+    bp.frequency.setValueAtTime(up ? f0 : f1, t0); bp.frequency.exponentialRampToValueAtTime(up ? f1 : f0, t1);
+    g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v, t1 - .01); g.gain.linearRampToValueAtTime(0, t1);
+    n.connect(bp); bp.connect(g); out(g, 1, 0, .3);
+  };
+  const riser = (t0, t1, v = .4) => {
+    whoosh(t0, t1, v * 1.2, true, 200, 9000);
+    const o = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(90, t0); o.frequency.exponentialRampToValueAtTime(720, t1);
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(400, t0); lp.frequency.exponentialRampToValueAtTime(5000, t1);
+    g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v * .5, t1 - .01); g.gain.linearRampToValueAtTime(0, t1);
+    o.connect(lp); lp.connect(g); out(g, 1, 0, .3); o.start(t0); o.stop(t1 + .02);
+  };
+  const slash = (t, v = .6, pan = 0) => {
+    const n = nsrc(t, .16, t * 2.3), bp = ac.createBiquadFilter(), g = ac.createGain();
+    bp.type = 'bandpass'; bp.Q.value = 3; bp.frequency.setValueAtTime(7000, t); bp.frequency.exponentialRampToValueAtTime(900, t + .13);
+    env(g, t, .004, v, .13); n.connect(bp); bp.connect(g); out(g, 1, pan, .25);
+  };
+  const boop = (t, v = .6, f0 = 880, f1 = 330, dur = .2) => { // a assinatura sonora
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain(), g2 = ac.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur * .6);
+    o2.type = 'triangle'; o2.frequency.setValueAtTime(f0 * 2, t); o2.frequency.exponentialRampToValueAtTime(f1 * 2, t + dur * .6);
+    env(g, t, .004, v, dur); env(g2, t, .004, v * .12, dur * .6);
+    o.connect(g); o2.connect(g2); out(g, 1, 0, .35); out(g2, 1, 0, .35);
+    o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+  };
+  const tick = (t, f = 1800, v = .25, pan = 0) => {
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f;
+    env(g, t, .001, v, .045); o.connect(g); out(g, 1, pan, .2); o.start(t); o.stop(t + .07);
+  };
+  const pad = (t0, t1, freqs, v = .1, cut = 700) => {
+    const lp = ac.createBiquadFilter(), g = ac.createGain();
+    lp.type = 'lowpass'; lp.frequency.value = cut; lp.Q.value = .5;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(v, t0 + .8); g.gain.setValueAtTime(v, t1 - .3); g.gain.linearRampToValueAtTime(0, t1);
+    lp.connect(g); out(g, 1, 0, .6);
+    freqs.forEach((f, i) => [-6, 6].forEach(dt => {
+      const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = dt + i;
+      o.connect(lp); o.start(t0); o.stop(t1 + .05);
+    }));
+  };
+  const bass = (t, f, dur = .22, v = .5) => {
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = 'sawtooth'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f / 2;
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(900, t); lp.frequency.exponentialRampToValueAtTime(160, t + dur);
+    env(g, t, .004, v, dur); o.connect(lp); o2.connect(g); lp.connect(g); out(g, 1);
+    o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+  };
+  const impact = (t, v = 1) => { kick(t, v, 170, 38, .6); sub(t, v * .8, 1.2); crash(t, v * .32, 1.1); clap(t, v * .4); };
+
+  /* --- partitura --- */
+  // S0 batimento
+  [[.5, .7], [.62, .45], [1, .8], [1.12, .5]].forEach(([t, v]) => kick(t, v, 95, 38, .32));
+  whoosh(1.05, 1.5, .55);
+  // S1 pedidos
+  [1.5, 2.5, 3.5].forEach(t => { impact(t, 1); boop(t + .02, .12, 520, 260, .15); });
+  for (let t = 1.75; t < 4.5; t += .25) hat(t, t % .5 ? .14 : .22, .03, (t * 4 % 2) ? .3 : -.3);
+  [2.0, 3.0, 4.0].forEach(t => clap(t, .55, .1));
+  [1.5, 2.5, 3.5].forEach((t, i) => { bass(t, [73.4, 87.3, 65.4][i], .4, .35); bass(t + .75, [73.4, 87.3, 65.4][i], .2, .25); });
+  // S2 riscos e pergunta
+  kick(4.5, .6, 120, 40, .4);
+  [4.75, 4.875, 5.0].forEach((t, i) => slash(t, .6, [-.4, 0, .4][i]));
+  whoosh(4.95, 5.4, .3, false, 400, 3000);
+  pad(5.4, 9.2, [73.4, 110, 174.6, 220], .09, 650);
+  sub(5.5, .5, 3, 36.7);
+  [5.5, 5.62, 5.74].forEach((t, i) => tick(t, 900 + i * 180, .18));
+  slash(6.45, .35);
+  [7.05, 7.15].forEach(t => tick(t, 1400, .1));
+  for (let t = 6.5; t < 9.0; t += .5) kick(t, .35, 90, 36, .3);
+  for (let t = 8.0; t < 9.0; t += .125) hat(t, .05 + (t - 8) * .18, .03);
+  whoosh(8.9, 9.5, .7);
+  // S3 olhe além
+  impact(9.5, 1); for (let t = 9.5; t < 10.5; t += .125) hat(t, .16, .03, Math.sin(t * 9) * .4);
+  clap(10.0, .6);
+  impact(10.5, 1); [10.5, 10.625, 10.75, 10.875].forEach((t, i) => tick(t, 2400 - i * 250, .16, i % 2 ? .4 : -.4));
+  whoosh(10.7, 11.0, .5);
+  impact(11.0, 1.15); sub(11.0, .9, 2.8, 41); crash(11.0, .5, 2.4); boop(11.0, .18, 440, 220, .5);
+  pad(11.0, 13.9, [55, 82.4, 130.8, 164.8], .08, 900);
+  [11.5, 12.0, 12.5].forEach(t => kick(t, .45, 110, 38, .35));
+  riser(12.55, 13.93, .55);
+  for (let t = 13.0; t < 13.9; t += .0625) hat(t, .04 + (t - 13) * .2, .02);
+  // S4 frentes
+  impact(14.0, 1.25); crash(14.0, .55, 2.2); boop(14.0, .25, 1100, 380, .25);
+  for (let t = 14.0; t < 18.5; t += .5) kick(t, .9, 150, 40, .38);
+  for (let t = 14.5; t < 18.5; t += 1) clap(t, .7, 0);
+  for (let t = 14.0; t < 18.5; t += .125) hat(t + .0001, (t * 8) % 2 ? .16 : .09, .03, (t * 8) % 2 ? .35 : -.35);
+  const BL = [73.4, 73.4, 87.3, 73.4, 110, 98, 87.3, 65.4];
+  for (let i = 0, t = 14.0; t < 18.5; t += .25, i++) if (i % 2 === 0 || i % 8 === 3 || i % 8 === 7) bass(t, BL[i % 8], .2, .45);
+  [15.5, 17.0].forEach(t => { crash(t, .4, 1.2); sub(t, .6, .8); whoosh(t - .35, t, .5); });
+  // S5 conectado
+  impact(18.5, 1); clap(19.0, .5); kick(19.5, .6); clap(20.0, .5); kick(20.5, .6); clap(21.0, .5);
+  boop(19.3, .35, 700, 350, .18);
+  [19.5, 19.75, 20.0].forEach((t, i) => boop(t, .3, [660, 780, 990][i], [440, 520, 660][i], .14));
+  pad(19.0, 21.7, [98, 146.8, 196, 246.9], .06, 1200);
+  for (let t = 19.0; t < 21.2; t += .25) hat(t, .1, .03);
+  whoosh(21.2, 21.72, .6, false, 200, 5000);
+  whoosh(21.72, 22.0, .55);
+  // S6 método
+  impact(22.0, 1.05);
+  for (let i = 1; i < 5; i++) { const t = 22 + i * .5; kick(t, .8, 150, 40, .3); tick(t, 900 + i * 220, .3); }
+  for (let t = 22.0; t < 24.5; t += .125) hat(t, .13, .03, (t * 8) % 2 ? .3 : -.3);
+  for (let i = 0, t = 22.0; t < 24.5; t += .25, i++) if (i % 2 === 0) bass(t, [73.4, 87.3, 98, 110, 130.8][Math.floor(i / 2)], .22, .4);
+  [24.5, 24.75, 25.0].forEach(t => impact(t, .95));
+  for (let t = 25.0; t < 25.5; t += .0625) clap(t, .15 + (t - 25) * 1.1, 0);
+  riser(24.9, 25.5, .4);
+  // S7 dê um boop
+  tick(25.55, 1200, .15); tick(25.65, 1400, .15); sub(25.5, .35, .5, 55);
+  impact(26.0, 1);
+  impact(26.5, 1.3); sub(26.5, 1, 2.4, 38); crash(26.5, .6, 2.6); boop(26.52, .7, 900, 300, .28);
+  for (let t = 27.0; t < 29.5; t += .5) kick(t, .75, 150, 40, .34);
+  for (let t = 27.5; t < 29.5; t += 1) clap(t, .6);
+  for (let t = 27.0; t < 29.5; t += .25) hat(t, .12, .03, (t * 4) % 2 ? .3 : -.3);
+  for (let i = 0, t = 27.0; t < 29.5; t += .5, i++) bass(t, [73.4, 73.4, 87.3, 65.4, 73.4][i % 5], .3, .35);
+  boop(27.1, .22, 600, 450, .12); boop(27.7, .22, 720, 540, .12); boop(28.3, .2, 520, 400, .12);
+  tick(28.7, 3200, .18); tick(28.95, 3200, .18);
+  boop(27.3, .25, 1200, 800, .1); whoosh(28.2, 28.4, .25, true, 800, 6000);
+  whoosh(29.3, 29.98, .65);
+  // S8 assinatura
+  sub(30.0, 1, 3.2, 36.7); kick(30.0, 1, 160, 36, .7); crash(30.0, .45, 3.0);
+  boop(30.02, .75, 880, 330, .3);
+  pad(30.0, 33.45, [73.4, 110, 146.8, 185, 220], .08, 1400);
+  tick(30.45, 1600, .12); boop(32.1, .18, 1000, 700, .1);
+
+  const buf = await ac.startRendering();
+  // normaliza para -1 dBFS
+  let peak = 0; for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) peak = Math.max(peak, Math.abs(d[i])); }
+  const g = .89 / (peak || 1); for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] *= g; }
+  return buf;
+}
+window.renderAudio = renderAudio;
+
+/* =========================================================
+   PLAYER (fora do modo de renderização)
+   ========================================================= */
+const RENDER = new URLSearchParams(location.search).has('render');
+if (RENDER) document.documentElement.classList.add('render');
+function fit() {
+  const s = RENDER ? 1 : Math.min(innerWidth / 1080, innerHeight / 1920);
+  stageEl.style.transform = `scale(${s})`;
+  stageEl.style.left = RENDER ? '0' : (innerWidth - 1080 * s) / 2 + 'px';
+  stageEl.style.top = RENDER ? '0' : (innerHeight - 1920 * s) / 2 + 'px';
+}
+addEventListener('resize', fit); fit();
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+window.ready = document.fonts.ready.then(() => Promise.all($$('img').map(i => i.decode().catch(() => {})))).then(() => { seek(RENDER ? 0 : 30.95); });
+
+if (!RENDER) {
+  let ctx = null, buf = null, src = null, t0 = 0, offset = 0, playing = false, raf = 0;
+  const bar = $('#bar'), fill = $('#bar b'), time = $('#time'), playBtn = $('#play');
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const now = () => playing ? ctx.currentTime - t0 : offset;
+  const paint = () => { const t = now(); seek(t); fill.style.width = (t / DUR * 100) + '%'; time.textContent = `${fmt(t)} / ${fmt(DUR)}`; bar.setAttribute('aria-valuenow', t.toFixed(1)); };
+  const loop = () => { paint(); if (now() >= DUR) { stop(); offset = 0; return; } raf = requestAnimationFrame(loop); };
+  async function play(from = offset) {
+    if (!ctx) { ctx = new AudioContext(); buf = await renderAudio(ctx.sampleRate); }
+    await ctx.resume();
+    src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
+    src.start(0, from); t0 = ctx.currentTime - from; playing = true;
+    document.body.classList.add('playing'); playBtn.textContent = '❚❚'; playBtn.setAttribute('aria-label', 'Pausar');
+    cancelAnimationFrame(raf); loop();
+  }
+  function stop() {
+    if (!playing) return; offset = now(); playing = false; try { src.stop(); } catch (e) {}
+    document.body.classList.remove('playing'); playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'Reproduzir'); cancelAnimationFrame(raf); paint();
+  }
+  const jump = t => { const was = playing; stop(); offset = clamp(t, 0, DUR - .01); paint(); if (was) play(); };
+  $('#cover').addEventListener('click', () => { $('#cover').remove(); play(0); });
+  playBtn.addEventListener('click', () => playing ? stop() : play(offset >= DUR - .05 ? 0 : offset));
+  $('#restart').addEventListener('click', () => jump(0));
+  bar.addEventListener('click', e => { const r = bar.getBoundingClientRect(); jump((e.clientX - r.left) / r.width * DUR); });
+  bar.addEventListener('keydown', e => { if (e.key === 'ArrowRight') jump(now() + 1); if (e.key === 'ArrowLeft') jump(now() - 1); });
+  addEventListener('keydown', e => { if (e.code === 'Space' && e.target === document.body) { e.preventDefault(); if ($('#cover')) $('#cover').click(); else playBtn.click(); } });
+  playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'Reproduzir');
+  if (reduced) $('#cover div').lastChild.textContent = 'Assistir com som (movimento intenso)';
+}
+</script>
+</body>
+</html>
