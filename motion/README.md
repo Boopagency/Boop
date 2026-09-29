@@ -39,6 +39,8 @@ FFMPEG=/caminho/do/ffmpeg node motion/render.mjs --film boop-film-02 --blur 4   
 node motion/render.mjs --film boop-film-02 --stills 2,11.5,26.9                  # quadros soltos em PNG
 ```
 
+Para renders longos, `--segments 3` divide o filme em partes de 3 s salvas em `dist/<filme>-partes/`. Se o processo cair, basta rodar o mesmo comando de novo: ele retoma da primeira parte que falta e, no fim, une as partes sem recomprimir.
+
 É preciso ter um `ffmpeg` com libx264. `--blur 4` amostra quatro subquadros por quadro (obturador de 180°). Com `--blur 1`, o render fica 4× mais rápido, para prévias.
 
 A pasta `motion/` não entra no build do site. `motion/dist/` fica fora do Git.
