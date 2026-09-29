@@ -59,7 +59,7 @@ console.log('trilha:', wav);
 // volume de redes sociais (-14 LUFS) em duas etapas: mede, aplica ganho fixo e um limitador (silêncios continuam silêncio)
 const measure = await new Promise((r, j) => {
   const p = spawn(ffmpeg, ['-hide_banner', '-i', wav, '-af', 'loudnorm=I=-14:TP=-1:LRA=20:print_format=json', '-f', 'null', '-']);
-  let log = ''; p.stderr.on('data', d => log += d); p.on('close', c => c ? j(new Error('loudnorm ' + c)) : r(JSON.parse(log.slice(log.lastIndexOf('{')))));
+  let log = ''; p.stderr.on('data', d => log += d); p.on('close', c => c ? j(new Error('loudnorm ' + c)) : r(JSON.parse(log.slice(log.lastIndexOf('{'), log.lastIndexOf('}') + 1))));
 });
 const loud = `volume=${(-14 - measure.input_i).toFixed(2)}dB,alimiter=limit=0.89:attack=3:release=50:level=disabled`;
 
@@ -70,16 +70,20 @@ const ff = spawn(ffmpeg, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-fram
   '-vf', vf, '-r', String(fps), '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
   '-af', loud, '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
 
+let ffExit = null;
+ff.on('exit', c => { ffExit = c; });
+ff.stdin.on('error', () => {});
 const total = Math.round((to - from) * fps * blur);
 const started = Date.now();
 for (let i = 0; i < total; i++) {
   // o subquadro i mostra o instante do meio da sua fatia de obturador
   const t = from + i / (fps * blur);
+  if (ffExit !== null) throw new Error(`ffmpeg encerrou antes da hora (código ${ffExit}) no quadro ${i}`);
   const png = await shot(t);
-  if (!ff.stdin.write(png)) await new Promise(r => ff.stdin.once('drain', r));
+  if (!ff.stdin.write(png)) await new Promise(r => { ff.stdin.once('drain', r); ff.once('exit', r); });
   if (i % (fps * blur) === 0) process.stdout.write(`\r${(i / total * 100).toFixed(0)}% · ${((Date.now() - started) / 1000).toFixed(0)}s`);
 }
 ff.stdin.end();
-await new Promise((r, j) => ff.on('close', c => c ? j(new Error('ffmpeg ' + c)) : r()));
+await new Promise((r, j) => ffExit !== null ? (ffExit ? j(new Error('ffmpeg ' + ffExit)) : r()) : ff.on('close', c => c ? j(new Error('ffmpeg ' + c)) : r()));
 await browser.close();
 console.log(`\nvídeo: ${out}`);
