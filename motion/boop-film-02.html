@@ -312,37 +312,15 @@ scene('sc-boop', T.boop, T.end, t => {
   $('#b-tag').style.opacity = P(t, 28.4, 28.7);
 });
 
-/* 6 · fecho: a piscadinha */
+/* 6 · fecho */
 buildSym($('#e-sym'), false);
-$('#e-sym').insertAdjacentHTML('beforeend', '<defs><clipPath id="wink-clip"><rect id="wink-rect" x="158" y="78" width="78" height="0"/></clipPath></defs><circle cx="196.99" cy="114.02" r="33.8" fill="#00C2FF" clip-path="url(#wink-clip)"/><path id="wink-line" d="M173 111Q197 129 221 111" stroke="#0B1B2C" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0"/>');
-$('#e-sym').insertAdjacentHTML('beforeend', '<path class="spark" d="M0 -16L3.2 -3.2L16 0L3.2 3.2L0 16L-3.2 3.2L-16 0L-3.2 -3.2Z" fill="#00C2FF"/><path class="spark" d="M0 -9L1.8 -1.8L9 0L1.8 1.8L0 9L-1.8 1.8L-9 0L-1.8 -1.8Z" fill="#FFFDF5"/>');
-const WINK = 31.2;
-function winkLid(t) { // fecha rápido, segura, abre com um leve exagero
-  if (t < WINK || t > WINK + .5) return 1;
-  if (t < WINK + .09) return 1 - E.inQuart(P(t, WINK, WINK + .09)) * .96;
-  if (t < WINK + .2) return .04;
-  return lerp(.04, 1, E.outBack(P(t, WINK + .2, WINK + .34)));
-}
+const BLINK = 30.9; // os dois olhos piscam; a trilha tem o som da piscada no mesmo instante
 scene('sc-end', T.end, DUR, t => {
   const s = $('#e-sym');
   const k = E.outExpo(P(t, T.end, T.end + .7));
-  const w = Math.sin(Math.PI * P(t, WINK - .04, WINK + .45));
-  s.style.transform = `translateY(${lerp(80, 0, k)}px) scale(${lerp(.8, 1, k) * (1 + .035 * w)}) rotate(${-4 * w}deg)`;
-  const [lx, ly] = look(t, [[0, -6, 2], [30.3, 0, 0], [31.9, 4, -1], [32.3, 0, 0]]);
-  $$('.pupil', s).forEach(p => p.setAttribute('transform', `translate(${lx} ${ly})`));
-  const lids = $$('.lid', s);
-  lids[0].style.transform = `scaleY(${1 - .14 * w})`; // o outro olho aperta junto
-  const wl = winkLid(t);
-  lids[1].style.transform = `scaleY(${wl})`;
-  const shut = clamp((1 - wl) / .96); // a pálpebra desce e, fechada, vira o risquinho da piscadela
-  $('#wink-rect').setAttribute('height', (shut * 74).toFixed(2));
-  $('#wink-line').setAttribute('opacity', clamp((shut - .75) * 4).toFixed(2));
-  $$('.spark', s).forEach((sp, i) => {
-    const a = WINK + .32 + i * .06, q = P(t, a, a + .42);
-    const sc = q <= 0 || q >= 1 ? 0 : Math.sin(Math.PI * q) * (1 + .3 * (1 - q));
-    const [x, y] = i ? [276, 30] : [256, 52];
-    sp.setAttribute('transform', `translate(${x} ${y}) rotate(${q * 90}) scale(${sc})`);
-  });
+  s.style.transform = `translateY(${lerp(80, 0, k)}px) scale(${lerp(.8, 1, k)})`;
+  const [lx, ly] = look(t, [[0, -6, 2], [30.3, 0, 0], [31.4, 5, -1], [31.9, 0, 0]]);
+  eyes(s, lx, ly, blink(t, [BLINK]));
   $('#e-url').style.opacity = P(t, 29.8, 30.1);
   $('#e-tag').style.opacity = P(t, 30.2, 30.5);
 });
@@ -789,15 +767,15 @@ async function renderAudio(sr = 48000) {
   tone(28.9, 2200, .03, .05, 'sine', .3);
   // 12 · fecho
   sub(T.end, .35, 1.5, 36.7); tone(T.end, 587.3, 1.6, .06, 'sine', .7);
-  // a piscadinha: "tk" quando a pálpebra fecha, "tling" quando abre
-  { const o = osc('sine', WINK, .05, 1100), g = ac.createGain(); o.frequency.exponentialRampToValueAtTime(260, WINK + .03); env(g, WINK, .001, .42, .045); o.connect(g); route(g, 1, .15, .1);
-    const n = nsrc(WINK, .02, 2.2), bp = ac.createBiquadFilter(), gn = ac.createGain(); bp.type = 'bandpass'; bp.frequency.value = 1700; bp.Q.value = 3; env(gn, WINK, .0005, .25, .014); n.connect(bp); bp.connect(gn); route(gn, 1, .15, .05); }
-  { const b = WINK + .22;
+  // a piscada dos dois olhos: "tk" quando fecham, "tling" quando reabrem
+  { const o = osc('sine', BLINK, .05, 1100), g = ac.createGain(); o.frequency.exponentialRampToValueAtTime(260, BLINK + .03); env(g, BLINK, .001, .42, .045); o.connect(g); route(g, 1, 0, .1);
+    const n = nsrc(BLINK, .02, 2.2), bp = ac.createBiquadFilter(), gn = ac.createGain(); bp.type = 'bandpass'; bp.frequency.value = 1700; bp.Q.value = 3; env(gn, BLINK, .0005, .25, .014); n.connect(bp); bp.connect(gn); route(gn, 1, 0, .05); }
+  { const b = BLINK + .1;
     const o = osc('sine', b, .7, 1975.5), g = ac.createGain(); o.frequency.exponentialRampToValueAtTime(2637, b + .045);
     const lfo = osc('sine', b, .7, 11), lg = ac.createGain(); lg.gain.value = 14; lfo.connect(lg); lg.connect(o.frequency);
-    env(g, b, .003, .3, .6); o.connect(g); route(g, 1, .25, .55);
-    tone(b + .012, 5274, .25, .06, 'sine', .6, .35);
-    tone(b + .07, 3951, .35, .07, 'sine', .7, .3); }
+    env(g, b, .003, .3, .6); o.connect(g); route(g, 1, 0, .55);
+    tone(b + .012, 5274, .25, .06, 'sine', .6, -.2);
+    tone(b + .07, 3951, .35, .07, 'sine', .7, .2); }
 
   const buf = await ac.startRendering();
   let peak = 0; for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) peak = Math.max(peak, Math.abs(d[i])); }
