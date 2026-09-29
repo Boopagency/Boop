@@ -1,8 +1,15 @@
-# Boop — “Olhe além.” · filme de motion design
+# Boop — filmes de motion design
+
+| Filme | Arquivo | Ideia |
+|---|---|---|
+| 01 · “Olhe além.” | `boop-film.html` | Tipografia cinética percorrendo a narrativa do site. |
+| 02 · “Perto demais.” | `boop-film-02.html` | Filme de posicionamento para Reels: dos pedidos ao todo, num único recuo de câmera. Conceito em [`filme-02-conceito.md`](filme-02-conceito.md). |
+
+## Filme 01 · “Olhe além.”
 
 Peça vertical 9:16 (1080 × 1920), 33,5 s, 120 BPM, feita para Reels, Stories e TikTok. Usa só a identidade do site: navy, ciano e osso, Poppins, tipografia vazada, sublinhado ciano, a escultura óptica e o símbolo dos olhos.
 
-## Roteiro
+### Roteiro
 
 | Tempo | Cena | O que acontece |
 |---|---|---|
@@ -16,20 +23,20 @@ Peça vertical 9:16 (1080 × 1920), 33,5 s, 120 BPM, feita para Reels, Stories e
 | 25,5–30 s | Dê um boop. | Os “oo” viram os olhos da marca: olham, piscam, e o CTA gira. |
 | 30–33,5 s | Assinatura | Símbolo vetorial montado, pupilas vivas, “Olhe além.” e deumboop.com.br. |
 
-## Como funciona
+## Como funciona (os dois filmes)
 
-- `boop-film.html` é a fonte. Cada quadro é uma função pura do tempo (`seek(t)`), então o filme renderiza sempre igual.
+- Os arquivos `boop-film*.html` são a fonte. Cada quadro é uma função pura do tempo (`seek(t)`), então o filme renderiza sempre igual.
 - A trilha é sintetizada no próprio navegador (`OfflineAudioContext`): batimento, impactos, riser, e o “boop” como assinatura sonora. Segue a mesma linha do tempo, então cada corte cai no tempo.
-- `build.mjs` embute fontes e imagens em `dist/boop-film.html`, um arquivo único que pode ser aberto em qualquer navegador (com player e som).
-- `render.mjs` captura os quadros no Chromium, mistura subquadros para o motion blur e codifica H.264 + AAC.
+- `build.mjs` embute fontes e imagens em `dist/<filme>.html`, um arquivo único que pode ser aberto em qualquer navegador (com player e som).
+- `render.mjs` captura os quadros no Chromium, mistura subquadros para o motion blur, deixa o som em -14 LUFS (padrão de redes) e codifica H.264 + AAC.
 
 ## Gerar
 
 ```sh
 pnpm install --frozen-lockfile
 node motion/build.mjs
-FFMPEG=/caminho/do/ffmpeg node motion/render.mjs --blur 4   # → motion/dist/boop-olhe-alem.mp4
-node motion/render.mjs --stills 2,11.5,26.9                 # quadros soltos em PNG
+FFMPEG=/caminho/do/ffmpeg node motion/render.mjs --film boop-film-02 --blur 4   # → motion/dist/boop-film-02.mp4
+node motion/render.mjs --film boop-film-02 --stills 2,11.5,26.9                  # quadros soltos em PNG
 ```
 
 É preciso ter um `ffmpeg` com libx264. `--blur 4` amostra quatro subquadros por quadro (obturador de 180°). Com `--blur 1`, o render fica 4× mais rápido, para prévias.

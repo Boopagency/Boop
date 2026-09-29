@@ -1,5 +1,5 @@
 // Renderiza o filme quadro a quadro no Chromium e codifica em MP4 (H.264 + AAC).
-//   node motion/render.mjs [--fps 30] [--blur 4] [--from 0] [--to 33.5] [--out motion/dist/boop-olhe-alem.mp4]
+//   node motion/render.mjs [--film boop-film-02] [--fps 30] [--blur 4] [--from 0] [--to 33.5] [--out motion/dist/boop-olhe-alem.mp4]
 //   --blur N: amostra N subquadros por quadro e mistura (motion blur de obturador 180°).
 //   --stills 1.5,11.4,...: só exporta PNGs desses instantes.
 // Requer ffmpeg com libx264 (variável FFMPEG ou no PATH) e o Chromium do Playwright (CHROMIUM opcional).
@@ -14,13 +14,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, all) => (v.startsWith('--') && a.push([v.slice(2), all[i + 1]]), a), []));
 const fps = +(args.fps ?? 30);
 const blur = +(args.blur ?? 1);
-const out = resolve(args.out ?? resolve(here, 'dist/boop-olhe-alem.mp4'));
+const film = args.film ?? 'boop-film';
+const out = resolve(args.out ?? resolve(here, `dist/${film}.mp4`));
 const ffmpeg = process.env.FFMPEG ?? 'ffmpeg';
 const executablePath = process.env.CHROMIUM ?? (existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined);
 
 const browser = await chromium.launch({ executablePath, args: ['--autoplay-policy=no-user-gesture-required', '--force-color-profile=srgb'] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(resolve(here, 'dist/boop-film.html')).href + '?render');
+await page.goto(pathToFileURL(resolve(here, `dist/${film}.html`)).href + '?render');
 await page.evaluate(() => window.ready);
 const DUR = await page.evaluate(() => window.DUR);
 const from = +(args.from ?? 0), to = Math.min(+(args.to ?? DUR), DUR);
@@ -30,14 +31,14 @@ const shot = async t => { await page.evaluate(t => window.seek(t), t); return pa
 
 if (args.stills) {
   for (const s of args.stills.split(',').map(Number)) {
-    const file = resolve(dirname(out), `still-${s.toFixed(2)}.png`);
+    const file = resolve(dirname(out), `${film}-still-${s.toFixed(2).padStart(5, '0')}.png`);
     await writeFile(file, await shot(s)); console.log(file);
   }
   await browser.close(); process.exit(0);
 }
 
 // trilha
-const wav = resolve(dirname(out), 'trilha.wav');
+const wav = resolve(dirname(out), `${film}-trilha.wav`);
 const pcm = await page.evaluate(async () => {
   const buf = await window.renderAudio(48000);
   const L = buf.getChannelData(0), R = buf.getChannelData(1), n = L.length;
@@ -55,12 +56,19 @@ head.writeUInt32LE(48000 * 4, 28); head.writeUInt16LE(4, 32); head.writeUInt16LE
 await writeFile(wav, Buffer.concat([head, data]));
 console.log('trilha:', wav);
 
+// volume de redes sociais (-14 LUFS) em duas etapas: mede, aplica ganho fixo e um limitador (silêncios continuam silêncio)
+const measure = await new Promise((r, j) => {
+  const p = spawn(ffmpeg, ['-hide_banner', '-i', wav, '-af', 'loudnorm=I=-14:TP=-1:LRA=20:print_format=json', '-f', 'null', '-']);
+  let log = ''; p.stderr.on('data', d => log += d); p.on('close', c => c ? j(new Error('loudnorm ' + c)) : r(JSON.parse(log.slice(log.lastIndexOf('{')))));
+});
+const loud = `volume=${(-14 - measure.input_i).toFixed(2)}dB,alimiter=limit=0.89:attack=3:release=50:level=disabled`;
+
 // vídeo: subquadros entram no ffmpeg a fps*blur e são misturados em grupos (tmix) antes de reduzir para fps
 const vf = blur > 1 ? `tmix=frames=${Math.ceil(blur / 2)}:weights='${Array(Math.ceil(blur / 2)).fill(1).join(' ')}',select='not(mod(n\\,${blur}))',setpts=N/${fps}/TB` : 'null';
 const ff = spawn(ffmpeg, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * blur), '-i', '-',
   '-ss', String(from), '-i', wav,
   '-vf', vf, '-r', String(fps), '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
-  '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+  '-af', loud, '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
 
 const total = Math.round((to - from) * fps * blur);
 const started = Date.now();
