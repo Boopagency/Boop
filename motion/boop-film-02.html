@@ -328,6 +328,7 @@ scene('sc-end', T.end, DUR, t => {
    CAMPO — canvas: parede → pontos → ilhas → olhos
    ========================================================= */
 const cv = $('#field'), ctx = cv.getContext('2d');
+const LAYER = [0, 1, 2].map(() => Object.assign(document.createElement('canvas'), { width: 1080, height: 1920 }));
 const CLUSTERS = [
   { k: 'Marca', c: [270, 650], w: ['uma marca nova.', 'logo novo.', 'rebranding.', 'paleta.', 'slogan.', 'naming.'] },
   { k: 'Conteúdo', c: [810, 740], w: ['mais posts.', 'reels.', 'stories.', 'carrossel.', 'vídeo.', 'newsletter.'] },
@@ -411,7 +412,10 @@ function drawField(t) {
   const ink = inv ? '#0B1B2C' : '#FFFDF5';
 
   for (let z = 0; z < 3; z++) {
-    ctx.filter = dofK > .02 && z ? `blur(${(dofK * z * 5).toFixed(1)}px)` : 'none';
+    // cada camada de profundidade é desenhada inteira e desfocada de uma vez
+    const blur = dofK > .02 && z ? dofK * z * 5 : 0;
+    const g = blur ? LAYER[z].getContext('2d') : ctx;
+    if (blur) { g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, 1080, 1920); }
     for (const f of F) {
       if (f.z !== z) continue;
       const [wx, wy, ws] = wallPos(f, t);
@@ -427,19 +431,20 @@ function drawField(t) {
       if (ta > 0.01) {
         let col = ink;
         if (live && hash(f.id, step + 50) < .13) col = '#00C2FF';
-        ctx.globalAlpha = ta * dim * fade;
-        ctx.font = `600 ${size.toFixed(1)}px Poppins`; ctx.letterSpacing = `${(-.05 * size).toFixed(2)}px`;
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        if (live && f.row % 3 === 1) { ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.strokeText(f.w, x, y); }
-        else { ctx.fillStyle = col; ctx.fillText(f.w, x, y); }
+        g.globalAlpha = ta * dim * fade;
+        g.font = `600 ${size.toFixed(1)}px Poppins`; g.letterSpacing = `${(-.05 * size).toFixed(2)}px`;
+        g.textAlign = 'center'; g.textBaseline = 'middle';
+        if (live && f.row % 3 === 1) { g.strokeStyle = col; g.lineWidth = 2.5; g.strokeText(f.w, x, y); }
+        else { g.fillStyle = col; g.fillText(f.w, x, y); }
       }
       if (ta < 1 && t >= T.pull) {
-        ctx.globalAlpha = (1 - ta) * dim * fade;
-        ctx.fillStyle = '#FFFDF5';
+        g.globalAlpha = (1 - ta) * dim * fade;
+        g.fillStyle = '#FFFDF5';
         const rr = lerp(3.4, 5.2, rk);
-        ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI * 2); ctx.fill();
+        g.beginPath(); g.arc(x, y, rr, 0, Math.PI * 2); g.fill();
       }
     }
+    if (blur) { g.globalAlpha = 1; ctx.filter = `blur(${blur.toFixed(1)}px)`; ctx.globalAlpha = 1; ctx.drawImage(LAYER[z], 0, 0); ctx.filter = 'none'; }
   }
   ctx.filter = 'none'; ctx.globalAlpha = 1;
 
