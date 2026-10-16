@@ -1,10 +1,10 @@
 # O boop que não chega — Reels 1080×1920, 30 fps, 24 s
 
-Um dedo quase dá um boop numa esfera ciano e só encosta no fim. É um vídeo sobre retenção.
+Duas pontas de lápis quase se encostam e só se tocam no fim. É um vídeo sobre retenção.
 
 | Arquivo | O que é |
 |---|---|
-| `motion.html` | Cena completa. WebGL (dedo e esfera em raymarching) + timeline GSAP determinística. Abra no navegador para ver a prévia; clique para tocar com som. |
+| `motion.html` | Cena completa. WebGL (lápis em raymarching) + timeline GSAP determinística. Abra no navegador para ver a prévia; clique para tocar com som. |
 | `render.mjs` | Gera `dist/boop-que-nao-chega.html` (página única, com GSAP e fontes embutidas) e renderiza quadro a quadro para `dist/boop-que-nao-chega.mp4`. |
 | `audio.py` | Design de som sintetizado (sem voz) → `dist/boop-que-nao-chega.wav`. |
 
@@ -39,8 +39,8 @@ dá para exportar o mesmo vídeo de novo sem nenhuma diferença.
 | 10,55–14,75 | Rolagem: um swipe por post e um toque grave quando cada post assenta |
 | 15,0–17,25 | Whoosh de volta (zoom in) + o zumbido volta baixinho |
 | 17,5–18,0 | Silêncio absoluto |
-| 18,0 | **Boop**: seno redondo com queda de altura, sub de 68 Hz, estalo e brilho das partículas |
-| 18,6–19,0 | Subida curta: a esfera voando até o olho |
+| 18,0 | **Boop** (as pontas se tocam): seno redondo com queda de altura, sub de 68 Hz, estalo e brilho das partículas |
+| 18,6–19,0 | Subida curta: a gota ciano voando até o olho |
 | 19,0 · 19,28 · 19,4 · 19,5 · 19,74 | Pops elásticos (olho 1, olho 2, topete, chifre) e a piscada |
 | 19,95–20,8 | Whoosh suave do wipe |
 | 20,0–24,0 | Acorde suave e otimista (Cadd9/6), com fade de 60 ms no corte |
