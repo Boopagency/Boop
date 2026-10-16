@@ -1,5 +1,5 @@
 """Design de som de "O boop que não chega" (sem voz). Gera dist/boop-que-nao-chega.wav, 48 kHz estéreo.
-Marcações (s): zumbido 0–7 (corte seco) · tique 1,2 e 2–7 · whoosh 8–10 · rolagem 10,5–14,75 ·
+Marcações (s): zumbido 0–7 sob o vídeo real (corte seco) · whoosh 8–10 · rolagem 10,5–14,75 ·
 whoosh de volta 15–17 · silêncio 17,5–18 · boop 18 · voo/pops 18,6–19,8 · acorde 20–24."""
 import os, wave
 import numpy as np
@@ -49,8 +49,8 @@ def drone(a, b, f0, f1, g0, g1):
 add(drone(0, 7, 38, 56, .05, .5), 0)
 add(drone(15.2, 17.5, 46, 56, .0, .22), 15.2)  # volta discreta, corta no silêncio
 
-# tique-taque do contador
-for i, at in enumerate([1.2, 2, 3, 4, 5, 6, 7]):
+# (sem tique-taque: os primeiros 7 s são o vídeo real, sem contador)
+for i, at in enumerate([]):
     s = np.arange(int(.03 * SR)) / SR
     x = np.sin(2 * np.pi * (3200 if i % 2 else 2700) * s) * np.exp(-s / .006)
     x[:96] += biquad(rnd.standard_normal(96), 6000, .9, 'bp') * np.linspace(1, 0, 96)

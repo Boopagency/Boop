@@ -23,7 +23,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #screen{width:1080px;height:1920px;overflow:hidden;background:#0b0d12}
 #scroller,#feed,#macro{width:1080px;height:1920px}
 #gl{width:1080px;height:1920px;display:block}
-#dof{width:1080px;height:1920px;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+#dof{width:1080px;height:1920px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
   -webkit-mask-image:linear-gradient(#000 0%,rgba(0,0,0,.8) 13%,transparent 35%,transparent 64%,rgba(0,0,0,.75) 88%,#000 100%);
   mask-image:linear-gradient(#000 0%,rgba(0,0,0,.8) 13%,transparent 35%,transparent 64%,rgba(0,0,0,.75) 88%,#000 100%)}
 .post{position:absolute;left:0;width:1080px;height:1920px;overflow:hidden;filter:grayscale(1) blur(14px) brightness(.8)}
@@ -37,11 +37,13 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #logo-host{left:220px;top:600px;width:640px;height:320px;z-index:4;opacity:0}
 #pglow{width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;z-index:5;opacity:0;
   background:radial-gradient(circle at 36% 32%,#e6fdff 0%,#00D4F5 34%,#0096c8 100%);box-shadow:0 0 40px rgba(0,212,245,.7)}
-#cap{left:640px;top:900px;width:330px;z-index:6}
-.sent{position:absolute;left:0;top:0;width:330px}
+#cap{left:668px;top:941px;width:300px;z-index:6}
+.sent{position:absolute;left:0;top:0;width:300px}
 .w{display:inline-block;font-weight:300;font-size:34px;line-height:1.24;margin-right:.24em;opacity:0;white-space:nowrap}
 .w.b{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:46px;line-height:1.12;letter-spacing:-.012em}
-#counter{left:72px;top:1638px;font-size:22px;font-weight:300;letter-spacing:.06em;font-variant-numeric:tabular-nums;opacity:0;z-index:6}
+#real,#intro{width:1080px;height:1920px;display:block;object-fit:cover}
+#intro{display:none}
+#scan{left:0;width:1080px;height:4px;margin-top:-2px;opacity:0;background:#e9fdff;box-shadow:0 0 18px 6px rgba(0,212,245,.9),0 0 90px 30px rgba(0,212,245,.35)}
 #cta{left:0;top:1062px;width:1080px;text-align:center;font-size:50px;font-weight:400;letter-spacing:-.01em;color:var(--navy);z-index:5}
 #cta .w{font-size:50px;font-weight:400;margin-right:.26em}
 #foot{left:0;top:1636px;width:1080px;text-align:center;font-size:26px;font-weight:300;color:var(--navy);opacity:0;z-index:5}
@@ -55,7 +57,8 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
     <div id="screen" class="abs">
       <div id="scroller" class="abs">
         <div id="feed" class="abs"></div>
-        <div id="macro" class="abs"><canvas id="gl" width="1080" height="1920"></canvas><div id="dof" class="abs"></div></div>
+        <div id="macro" class="abs"><canvas id="gl" width="1080" height="1920"></canvas><div id="dof" class="abs"></div>
+          <img id="real" class="abs" src="freeze.jpg" alt=""><video id="intro" class="abs" src="intro.mp4" muted playsinline preload="auto"></video><div id="scan" class="abs"></div></div>
       </div>
       <svg id="igui" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" stroke="#a9adb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <g transform="translate(954 1118) scale(3.2)"><path d="M12 20.5s-7.5-4.6-9.6-9C.8 8 3 4.5 6.6 4.5c2.2 0 3.9 1.3 5.4 3.4 1.5-2.1 3.2-3.4 5.4-3.4 3.6 0 5.8 3.5 4.2 7-2.1 4.4-9.6 9-9.6 9z"/></g>
@@ -81,7 +84,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
   <div id="logo-host" class="abs"></div>
   <div id="pglow" class="abs"></div>
   <div id="cap" class="abs"></div>
-  <div id="counter" class="abs">00:01</div>
   <div id="cta" class="abs"></div>
   <div id="foot" class="abs">@boop.oficial_ · WhatsApp (42) 9937-9186</div>
   <canvas id="grain" class="abs" width="1080" height="1920"></canvas>
@@ -133,10 +135,10 @@ float vnoise(vec3 p){
              mix(mix(hash3(i+vec3(0,0,1)), hash3(i+vec3(1,0,1)), f.x), mix(hash3(i+vec3(0,1,1)), hash3(i+vec3(1,1,1)), f.x), f.y), f.z);
 }
 
-const float LEAN = 0.26;          // o corpo do lápis vem um pouco para a câmera
+const float LEAN = 0.06;          // o corpo do lápis vem um pouco para a câmera
 const float SA = 0.2874, CA = 0.9578;  // meio ângulo do cone apontado (16,7°)
-const float HEX = 0.118;          // apótema do corpo sextavado
-const float GRAPH = 0.115;        // altura da ponta de grafite
+const float HEX = 0.27;           // apótema do corpo sextavado
+const float GRAPH = 0.24;         // altura da ponta de grafite
 
 // coordenadas locais: ponta na origem, corpo subindo em +y
 vec3 toPencil(vec3 p, float tipY, float dir, float spin){
@@ -326,23 +328,25 @@ const U = {}; for (const n of ['uRes', 'uT', 'uF', 'uS', 'uK']) U[n] = gl.getUni
 gl.viewport(0, 0, W, H); gl.uniform2f(U.uRes, W, H);
 
 const PXU = 960, wx = x => (x - 540) / PXU, wy = y => (960 - y) / PXU;
-const AXIS = wx(425), MEET = wy(900), G0 = .8, G1 = .012, BEAD = .046;
+// posição e vão medidos no último quadro do vídeo real (6,77 s), em escala 1080×1920
+const AXIS = wx(552), MEET = wy(941), GREAL = .111, G1 = .012, BEAD = .046;
 const SYM = { x: 540, y: 860, s: 2.6 };
 const PUP = { x: SYM.x + (79.0256 - 134) * SYM.s, y: SYM.y + (111.744 - 93.5) * SYM.s, r: 16.0342 * SYM.s };
 
 // tempo "vivo" da cena: para nos congelamentos (7–15 s e 17,5–18 s)
-const drift = t => t < 7 ? t : t < 15 ? 7 : t < 17.5 ? t - 8 : t < 18 ? 9.5 : t - 8.5;
+// até 7 s é o vídeo real; o CG congela até 8 s, volta a se mexer no celular e congela de novo no feed
+const drift = t => t < 8 ? 7 : t < 10.5 ? t - 1 : t < 15 ? 9.5 : t < 17.5 ? t - 5.5 : t < 18 ? 12 : t - 6;
 
 function macroState(t){
   const d = drift(t);
-  const trem = t < 7 ? 1 : (t >= 15 && t < 17.5 ? .6 * prog(t, 15, 15.6) : 0);
-  let gap = t < 1.2 ? G0 : t < 7 ? lerp(G0, G1, expoOut(prog(t, 1.2, 7))) : G1;
-  let rec = 0, exit = 0, blunt = .0025;
+  const trem = t >= 8 && t < 10.5 ? .6 * prog(t, 8, 8.6) : (t >= 15 && t < 17.5 ? .6 * prog(t, 15, 15.6) : 0);
+  let gap = t < 8 ? GREAL : lerp(GREAL, G1, expoOut(prog(t, 8, 10.5)));
+  let rec = 0, exit = 0, blunt = .03;
   const dt = t - 18;
   if (t >= 17.96) gap = lerp(G1, 0, p2i(prog(t, 17.96, 18)));
   if (dt >= 0){  // as pontas batem, quebram e recuam com mola
     rec = .05 * (1 - Math.exp(-dt * 22)) + .022 * Math.exp(-dt * 5) * Math.sin(2 * Math.PI * 3.2 * dt);
-    blunt = .012;
+    blunt = .045;
     exit = p3i(prog(t, 18.5, 18.95)) * 1.8;
   }
   const j1 = (Math.sin(d * 7.3 + 1) * .0015 + Math.sin(d * 3.1) * .0007) * trem;
@@ -469,8 +473,8 @@ const pglow = $('#pglow'); Object.assign(pglow.style, { left: PUP.x + 'px', top:
 /* ---------- Texto ---------- */
 const cap = $('#cap');
 const SENTS = [
-  { out: 6.72, parts: [[2.5, 'Você'], [3.2, 'tá esperando'], [4.0, 'dois lápis'], [4.8, 'se'], [4.96, 'encostarem.', 1]] },
-  { out: 8.45, parts: [[7.2, 'Faz'], [7.38, '7 segundos.', 1]] },
+  { out: 7.92, parts: [[7.12, 'Você'], [7.26, 'parou.', 1]] },
+  { out: 8.85, parts: [[8.0, 'Faz'], [8.14, '7 segundos.', 1]] },
   { out: 10.95, parts: [[9.0, 'Isso tem nome:'], [9.48, 'retenção.', 1]] },
   { out: 14.5, parts: [[11.5, 'O post do seu negócio'], [12.5, 'ganha bem menos'], [12.86, 'que isso.', 1]] },
   { out: 17.12, parts: [[15.2, 'A não ser que'], [15.68, 'alguém pense nele assim.', 1]] },
@@ -491,9 +495,6 @@ for (const s of SENTS){
   gsap.set(el, { yPercent: -50 });
   ft(el, { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: .32, ease: 'power2.in' }, s.out);
 }
-const counter = $('#counter');
-ft(counter, { opacity: 0 }, { opacity: .4, duration: .25, ease: 'none' }, 1.2);
-ft(counter, { opacity: .4 }, { opacity: 0, duration: .4, ease: 'power2.in' }, 8.0);
 
 ft(st, { zoom: 0 }, { zoom: 1, duration: 2.1, ease: 'power3.inOut' }, 8.0);
 ft(st, { ui: 0 }, { ui: 1, duration: .8, ease: 'power2.out' }, 8.8);
@@ -532,6 +533,7 @@ ft([pupil1, pupil2], { x: 1.5, y: 4.5 }, { x: 0, y: 0, duration: .4, ease: 'powe
 tl.set({}, {}, DUR);
 
 /* ---------- Quadro ---------- */
+const realImg = $('#real'), scan = $('#scan'), intro = $('#intro');
 const world = $('#world'), phone = $('#phone'), screen = $('#screen'), igui = $('#igui'), island = $('#island'), endbg = $('#endbg');
 function frame(t){
   tl.seek(t, false);
@@ -539,7 +541,13 @@ function frame(t){
   drawGL(m);
   drawFX(t, m);
   drawGrain(t);
-  counter.textContent = '00:0' + Math.min(7, Math.max(1, Math.floor(t)));
+  // 0–7 s: vídeo real. 7–8 s: o quadro real congela e o CG o substitui numa varredura de cima para baixo
+  const sc = E('power2.inOut')(prog(t, 7.3, 7.95));
+  realImg.style.display = t < 7.95 ? 'block' : 'none';
+  realImg.style.clipPath = `inset(${sc * 100}% 0 0 0)`;
+  scan.style.top = sc * 1920 + 'px';
+  scan.style.opacity = t > 7.3 && t < 7.95 ? 1 : 0;
+  intro.style.display = t < 7 ? 'block' : 'none';
 
   const z = st.zoom, s = lerp(1, .5, z), fl = z * Math.sin(t * 1.25) * 8;
   world.style.transform = z ? `perspective(2400px) translate(${-205 * z}px, ${-14 * z + fl}px) rotateY(${z * (7 + 1.5 * Math.sin(t * .8))}deg) rotateX(${z * 3}deg) scale(${s})` : 'none';
@@ -569,7 +577,11 @@ if (!RENDER){
   const au = new Audio('boop-que-nao-chega.wav'); au.loop = true;
   let t0 = performance.now();
   addEventListener('click', () => { au.currentTime = 0; t0 = performance.now(); au.play().catch(() => {}); });
-  (function loop(){ frame(au.paused ? ((performance.now() - t0) / 1000) % DUR : au.currentTime % DUR); requestAnimationFrame(loop); })();
+  (function loop(){
+    const t = au.paused ? ((performance.now() - t0) / 1000) % DUR : au.currentTime % DUR;
+    if (t < 7){ if (Math.abs(intro.currentTime - t) > .15) intro.currentTime = t; if (intro.paused) intro.play().catch(() => {}); } else intro.pause();
+    frame(t); requestAnimationFrame(loop);
+  })();
 }
 </script>
 </body>
