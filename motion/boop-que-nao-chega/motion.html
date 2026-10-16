@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>O boop que não chega</title>
+<style>
+@font-face{font-family:"Inter";font-weight:300;src:url(vendor/inter-latin-300-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:400;src:url(vendor/inter-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;src:url(vendor/space-grotesk-latin-700-normal.woff2) format("woff2")}
+:root{--navy:#0A1740;--edge:#08080A;--cyan:#00D4F5;--off:#F2EFE9;--eblue:#1B3FE0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;transform-origin:0 0;
+  background:radial-gradient(ellipse 80% 62% at 50% 47%,#0A1740 0%,#0a1438 38%,#08080A 100%);
+  font-family:"Inter",sans-serif;color:var(--off);-webkit-font-smoothing:antialiased}
+.abs{position:absolute;left:0;top:0}
+#world{width:1080px;height:1920px;transform-origin:540px 960px;z-index:1}
+#phone{left:-42px;top:-42px;width:1164px;height:2004px;border-radius:162px;border:5px solid transparent;
+  background:linear-gradient(#0c0f16,#0c0f16) padding-box,
+    linear-gradient(145deg,rgba(27,63,224,.8),rgba(255,255,255,.12) 20%,rgba(255,255,255,0) 46%,rgba(255,255,255,.07) 72%,rgba(27,63,224,.55)) border-box;
+  box-shadow:0 140px 240px rgba(0,0,0,.8),0 0 180px rgba(0,212,245,.06)}
+#screen{width:1080px;height:1920px;overflow:hidden;background:#0b0d12}
+#scroller,#feed,#macro{width:1080px;height:1920px}
+#gl{width:1080px;height:1920px;display:block}
+#dof{width:1080px;height:1920px;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+  -webkit-mask-image:linear-gradient(#000 0%,rgba(0,0,0,.8) 13%,transparent 35%,transparent 64%,rgba(0,0,0,.75) 88%,#000 100%);
+  mask-image:linear-gradient(#000 0%,rgba(0,0,0,.8) 13%,transparent 35%,transparent 64%,rgba(0,0,0,.75) 88%,#000 100%)}
+.post{position:absolute;left:0;width:1080px;height:1920px;overflow:hidden;filter:grayscale(1) blur(14px) brightness(.8)}
+.post i{position:absolute;display:block}
+#igui,#island{opacity:0}
+#island{left:372px;top:34px;width:336px;height:98px;border-radius:49px;background:#000}
+#fx{z-index:2}
+#endbg{width:1080px;height:1920px;background:var(--off);z-index:3;clip-path:circle(0px at 540px 860px)}
+#sym{left:406px;top:766.5px;width:268px;height:187px;z-index:4;transform-origin:134px 93.5px}
+#sym svg,#logo-host svg{display:block;width:100%;height:100%;overflow:visible}
+#logo-host{left:220px;top:600px;width:640px;height:320px;z-index:4;opacity:0}
+#pglow{width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;z-index:5;opacity:0;
+  background:radial-gradient(circle at 36% 32%,#e6fdff 0%,#00D4F5 34%,#0096c8 100%);box-shadow:0 0 40px rgba(0,212,245,.7)}
+#cap{left:640px;top:900px;width:330px;z-index:6}
+.sent{position:absolute;left:0;top:0;width:330px}
+.w{display:inline-block;font-weight:300;font-size:34px;line-height:1.24;margin-right:.24em;opacity:0;white-space:nowrap}
+.w.b{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:46px;line-height:1.12;letter-spacing:-.012em}
+#counter{left:72px;top:1638px;font-size:22px;font-weight:300;letter-spacing:.06em;font-variant-numeric:tabular-nums;opacity:0;z-index:6}
+#cta{left:0;top:1062px;width:1080px;text-align:center;font-size:50px;font-weight:400;letter-spacing:-.01em;color:var(--navy);z-index:5}
+#cta .w{font-size:50px;font-weight:400;margin-right:.26em}
+#foot{left:0;top:1636px;width:1080px;text-align:center;font-size:26px;font-weight:300;color:var(--navy);opacity:0;z-index:5}
+#grain{z-index:9;mix-blend-mode:overlay;opacity:.1;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world" class="abs">
+    <div id="phone" class="abs"></div>
+    <div id="screen" class="abs">
+      <div id="scroller" class="abs">
+        <div id="feed" class="abs"></div>
+        <div id="macro" class="abs"><canvas id="gl" width="1080" height="1920"></canvas><div id="dof" class="abs"></div></div>
+      </div>
+      <svg id="igui" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" stroke="#a9adb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate(954 1118) scale(3.2)"><path d="M12 20.5s-7.5-4.6-9.6-9C.8 8 3 4.5 6.6 4.5c2.2 0 3.9 1.3 5.4 3.4 1.5-2.1 3.2-3.4 5.4-3.4 3.6 0 5.8 3.5 4.2 7-2.1 4.4-9.6 9-9.6 9z"/></g>
+        <g transform="translate(954 1268) scale(3.2)"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></g>
+        <g transform="translate(954 1418) scale(3.2)"><path d="M21.5 3 10 13.5M21.5 3l-6.8 18-4.7-7.5L2.5 9z"/></g>
+        <g fill="#a9adb5" stroke="none"><circle cx="993" cy="1592" r="5.5"/><circle cx="993" cy="1612" r="5.5"/><circle cx="993" cy="1632" r="5.5"/></g>
+        <circle cx="96" cy="1668" r="38" fill="#5d6169" stroke="none"/>
+        <text x="152" y="1682" fill="#b9bcc4" stroke="none" font-family="Inter" font-weight="400" font-size="38">@perfil.qualquer</text>
+        <g fill="#6c7078" stroke="none"><rect x="60" y="1730" width="560" height="20" rx="10"/><rect x="60" y="1768" width="380" height="20" rx="10"/></g>
+        <line x1="0" y1="1818" x2="1080" y2="1818" stroke="#3a3d44" stroke-width="2"/>
+        <g transform="translate(78 1840) scale(2.5)"><path d="M3 10.5 12 3.5l9 7V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></g>
+        <g transform="translate(294 1840) scale(2.5)"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></g>
+        <g transform="translate(510 1840) scale(2.5)"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></g>
+        <g transform="translate(726 1840) scale(2.5)"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8.5 5.5 3.5-5.5 3.5z"/></g>
+        <g transform="translate(942 1840) scale(2.5)"><circle cx="12" cy="12" r="9"/></g>
+      </svg>
+      <div id="island" class="abs"></div>
+    </div>
+  </div>
+  <canvas id="fx" class="abs" width="1080" height="1920"></canvas>
+  <div id="endbg" class="abs"></div>
+  <div id="sym" class="abs"></div>
+  <div id="logo-host" class="abs"></div>
+  <div id="pglow" class="abs"></div>
+  <div id="cap" class="abs"></div>
+  <div id="counter" class="abs">00:01</div>
+  <div id="cta" class="abs"></div>
+  <div id="foot" class="abs">@boop.oficial_ · WhatsApp (42) 9937-9186</div>
+  <canvas id="grain" class="abs" width="1080" height="1920"></canvas>
+</div>
+<svg width="0" height="0" style="position:absolute"><filter id="vblur" x="0" y="-5%" width="100%" height="110%"><feGaussianBlur id="vblurStd" stdDeviation="0 0"/></filter></svg>
+
+<!-- Símbolo da Boop: arquivo original (public/assets/olhar.svg), sem nenhuma alteração.
+     Para trocar pelo boop-simbolo.svg, cole o SVG aqui mantendo a mesma ordem de camadas. -->
+<template id="simbolo"><svg width="268" height="187" viewBox="0 0 268 187" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M76.735 27.7407L71.0085 48.5463C71.0085 48.5463 85.8974 47.3904 101.932 55.4815C117.966 63.5725 132.855 84.3781 132.855 84.3781C132.855 84.3781 147.744 64.7284 154.615 60.1049C161.487 55.4815 185.538 48.5463 185.538 48.5463V32.3642L168.359 42.767L177.521 19.6497L160.342 32.3642V19.6497L146.598 32.3642L142.017 0L111.094 38.1435L101.932 10.4028L87.0427 38.1435L76.735 27.7407Z" fill="#FFFDF5"/>
+<path d="M144.308 114.024C144.308 154.328 112.003 187 72.1538 187C32.3044 187 0 154.328 0 114.024C0 73.7211 32.3044 41.0488 72.1538 41.0488C112.003 41.0488 144.308 73.7211 144.308 114.024ZM38.9631 114.024C38.9631 132.564 53.8231 147.593 72.1538 147.593C90.4846 147.593 105.345 132.564 105.345 114.024C105.345 95.4849 90.4846 80.4556 72.1538 80.4556C53.8231 80.4556 38.9631 95.4849 38.9631 114.024Z" fill="#FFFDF5"/>
+<path d="M99.641 114.024C99.641 129.138 87.3346 141.39 72.1538 141.39C56.9731 141.39 44.6667 129.138 44.6667 114.024C44.6667 98.9106 56.9731 86.6585 72.1538 86.6585C87.3346 86.6585 99.641 98.9106 99.641 114.024ZM59.5097 114.024C59.5097 120.977 65.1707 126.613 72.1538 126.613C79.137 126.613 84.7979 120.977 84.7979 114.024C84.7979 107.072 79.137 101.436 72.1538 101.436C65.1707 101.436 59.5097 107.072 59.5097 114.024Z" fill="#FFFDF5"/>
+<ellipse cx="79.0256" cy="111.744" rx="16.0342" ry="15.9634" fill="#1A1A1A"/>
+<ellipse cx="73.2991" cy="106.043" rx="5.7265" ry="5.70122" fill="#FFFDF5"/>
+<path d="M144.308 114.024C144.308 154.328 112.003 187 72.1538 187C32.3044 187 0 154.328 0 114.024C0 73.7211 32.3044 41.0488 72.1538 41.0488C112.003 41.0488 144.308 73.7211 144.308 114.024ZM38.9631 114.024C38.9631 132.564 53.8231 147.593 72.1538 147.593C90.4846 147.593 105.345 132.564 105.345 114.024C105.345 95.4849 90.4846 80.4556 72.1538 80.4556C53.8231 80.4556 38.9631 95.4849 38.9631 114.024Z" fill="#0B1B2C"/>
+<ellipse cx="72.1538" cy="114.024" rx="27.4872" ry="27.3659" fill="#FFFDF5"/>
+<ellipse cx="79.0256" cy="111.744" rx="16.0342" ry="15.9634" fill="#1A1A1A"/>
+<ellipse cx="73.2991" cy="106.043" rx="5.7265" ry="5.70122" fill="#FFFDF5"/>
+<path d="M268 114.024C268 154.328 236.208 187 196.991 187C157.775 187 125.983 154.328 125.983 114.024C125.983 73.7211 157.775 41.0488 196.991 41.0488C236.208 41.0488 268 73.7211 268 114.024ZM164.328 114.024C164.328 132.564 178.952 147.593 196.991 147.593C215.031 147.593 229.655 132.564 229.655 114.024C229.655 95.4849 215.031 80.4556 196.991 80.4556C178.952 80.4556 164.328 95.4849 164.328 114.024Z" fill="#7AD7F4"/>
+<path d="M224.475 114.32C224.475 129.434 212.168 141.686 196.988 141.686C181.807 141.686 169.5 129.434 169.5 114.32C169.5 99.2062 181.807 86.9541 196.988 86.9541C212.168 86.9541 224.475 99.2062 224.475 114.32ZM198.133 121.161C198.133 128.114 192.295 113.18 199.278 113.18C206.261 113.18 199.278 128.114 199.278 121.161C199.278 114.209 206.261 113.18 199.278 113.18C192.295 113.18 198.133 114.209 198.133 121.161Z" fill="#FFFDF5"/>
+<ellipse cx="203.863" cy="111.744" rx="16.0342" ry="15.9634" fill="#1A1A1A"/>
+<ellipse cx="198.137" cy="106.043" rx="5.7265" ry="5.70122" fill="#FFFDF5"/>
+<path d="M196.991 56.2953C209.733 67.2608 217.776 69.7502 233.641 67.8187L232.808 54.8549L231.975 41.8911L231.142 28.9273L230.309 15.9634L221.98 26.0464L213.65 36.1294L205.321 46.2124L196.991 56.2953Z" fill="url(#paint0_linear_2004_2997)"/>
+<defs>
+<linearGradient id="paint0_linear_2004_2997" x1="215.316" y1="15.9634" x2="215.316" y2="67.8187" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00C2FF"/>
+<stop offset="1" stop-color="#1B171F"/>
+</linearGradient>
+</defs>
+</svg></template>
+
+<!-- Logo completa: cole aqui o boop-logo.svg (versão para fundo claro). Vazio = o cartão final usa o símbolo. -->
+<template id="logo"></template>
+
+<script id="frag" type="x-shader/x-fragment">
+precision highp float;
+uniform vec2 uRes;
+uniform float uT;
+uniform vec3 uF;   // dedo: x, y da ponta, inclinação
+uniform vec4 uS;   // esfera: cx, cy, raio, visível
+uniform vec4 uK;   // squash, suavidade do afundamento, brilho, flash
+
+vec3 lin(vec3 c){ return pow(c, vec3(2.2)); }
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float hash3(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+float vnoise(vec3 p){
+  vec3 i = floor(p), f = fract(p); f = f*f*(3. - 2.*f);
+  return mix(mix(mix(hash3(i), hash3(i+vec3(1,0,0)), f.x), mix(hash3(i+vec3(0,1,0)), hash3(i+vec3(1,1,0)), f.x), f.y),
+             mix(mix(hash3(i+vec3(0,0,1)), hash3(i+vec3(1,0,1)), f.x), mix(hash3(i+vec3(0,1,1)), hash3(i+vec3(1,1,1)), f.x), f.y), f.z);
+}
+
+const float RT = 0.118;   // raio da ponta
+const float RF = 0.134;   // raio do dedo
+const float LEAN = 0.30;  // o dedo vem do topo inclinado para a câmera
+
+vec3 toFinger(vec3 p){
+  p -= vec3(uF.x, uF.y + RT, 0.);
+  float c = cos(uF.z), s = sin(uF.z);
+  p.xy = mat2(c, s, -s, c) * p.xy;
+  float cl = cos(LEAN), sl = sin(LEAN);
+  p.yz = mat2(cl, -sl, sl, cl) * p.yz;
+  return p;
+}
+float sdFinger(vec3 p){
+  vec3 q = toFinger(p);
+  float h = clamp(q.y, 0., 6.);
+  float r = mix(RT, RF, smoothstep(0., .5, h)) + .008*smoothstep(.7, 1.7, h);
+  vec3 d = q - vec3(0., h, 0.);
+  d.z *= mix(1., 1.16, smoothstep(0., .35, h));
+  float crease = (exp(-pow((q.y - .50)/.007, 2.)) + .7*exp(-pow((q.y - .535)/.006, 2.))) * smoothstep(0., .06, q.z);
+  return (length(d) - r + .0022*crease) * .86;
+}
+float sdBall(vec3 p){
+  vec3 q = p - vec3(uS.xy, 0.);
+  vec3 sc = vec3(1. + .5*uK.x, 1. - uK.x, 1. + .5*uK.x);
+  return (length(q/sc) - uS.z) * min(sc.x, sc.y);
+}
+float smax(float a, float b, float k){ float h = clamp(.5 - .5*(b - a)/k, 0., 1.); return mix(b, a, h) + k*h*(1. - h); }
+
+vec2 map(vec3 p){
+  float f = sdFinger(p);
+  float b = uS.w > .5 ? smax(sdBall(p), -f, uK.y) : 1e3;
+  return f < b ? vec2(f, 1.) : vec2(b, 2.);
+}
+vec3 nrm(vec3 p){
+  const vec2 e = vec2(1., -1.) * .0006;
+  return normalize(e.xyy*map(p + e.xyy).x + e.yyx*map(p + e.yyx).x + e.yxy*map(p + e.yxy).x + e.xxx*map(p + e.xxx).x);
+}
+vec3 nrmF(vec3 p){
+  const vec2 e = vec2(1., -1.) * .0006;
+  return normalize(e.xyy*sdFinger(p + e.xyy) + e.yyx*sdFinger(p + e.yyx) + e.yxy*sdFinger(p + e.yxy) + e.xxx*sdFinger(p + e.xxx));
+}
+
+const vec3 L1 = vec3(0.2611, 0.8704, 0.4178);    // luz principal, de cima
+const vec3 L2 = vec3(-0.3417, 0.6835, -0.6450);  // recorte, de cima e de trás
+
+vec3 background(vec2 w){
+  vec2 v = (w - vec2(0., .04)) * vec2(1.05, .62);
+  float r = length(v);
+  vec3 c = mix(lin(vec3(10., 23., 64.)/255.), lin(vec3(8., 8., 10.)/255.), smoothstep(.04, .82, r));
+  c += lin(vec3(.10, .16, .33)) * .14 * exp(-dot(w - vec2(-.12, 1.05), w - vec2(-.12, 1.05)) * 2.2);
+  for (int i = 0; i < 11; i++){
+    float fi = float(i);
+    vec2 pos = vec2(hash(vec2(fi, 1.3))*1.3 - .65, hash(vec2(fi, 7.1))*2.1 - 1.05);
+    pos += vec2(sin(uT*.13 + fi), cos(uT*.11 + fi*1.7)) * .02;
+    float rad = .03 + .07*hash(vec2(fi, 3.7));
+    float d = length(w - pos);
+    float disc = smoothstep(rad, rad - .008, d);
+    float ring = disc - smoothstep(rad - .006, rad - .014, d);
+    vec3 bc = mix(lin(vec3(27., 63., 224.)/255.), lin(vec3(0., 212., 245.)/255.), hash(vec2(fi, 9.2)));
+    c += bc * (disc*.018 + ring*.012) * smoothstep(.12, .5, abs(w.x - uS.x) + abs(w.y - .06)*.3);
+  }
+  return c;
+}
+
+vec3 shadeFinger(vec3 p, vec3 n, vec3 rd){
+  vec3 q = toFinger(p) * 60.;
+  float n0 = vnoise(q);
+  vec3 g = vec3(vnoise(q + vec3(.15, 0, 0)), vnoise(q + vec3(0, .15, 0)), vnoise(q + vec3(0, 0, .15))) - n0;
+  n = normalize(n - g * .09);
+  vec3 skin = lin(vec3(.82, .66, .56));
+  float nl = dot(n, L1), nv = max(dot(n, -rd), 0.);
+  float dif = clamp((nl + .25) / 1.25, 0., 1.);
+  float term = smoothstep(-.35, .05, nl) * (1. - smoothstep(.05, .5, nl));
+  vec3 col = skin * dif * 1.2 * vec3(1., .97, .93);
+  col += skin * vec3(.9, .3, .2) * term * .25;
+  col += skin * lin(vec3(.30, .34, .48)) * .32 * nv;
+  col += skin * lin(vec3(.10, .16, .36)) * .5 * (.5 + .5*n.y);
+  col *= mix(.5, 1., pow(nv, .6));
+  col += skin * lin(vec3(.22, .28, .40)) * .2 * max(-n.y, 0.);
+  float fr = pow(1. - nv, 2.5);
+  col += vec3(1., .96, .92) * fr * max(dot(n, L2) + .3, 0.) * .6;
+  col += vec3(1.) * pow(max(dot(reflect(rd, n), L1), 0.), 16.) * .04;
+  // escurece para o alto: a luz cai fora do quadro
+  col *= mix(1., .55, smoothstep(.35, 1.05, p.y));
+  if (uS.w > .5){
+    vec3 bc = vec3(uS.xy, 0.);
+    float db = max(length(p - bc) - uS.z, 0.);
+    float facing = max(dot(n, normalize(bc - p)), 0.);
+    float b = facing * (exp(-db * 9.) * (.45 + .9*uK.z) + .14*exp(-db * 2.5));
+    col += lin(vec3(0., 212., 245.)/255.) * b * (.6*skin + .1);
+  }
+  return col;
+}
+
+vec3 shadeBall(vec3 p, vec3 n, vec3 rd){
+  vec3 V = -rd;
+  float nv = max(dot(n, V), 0.);
+  float fr = .04 + .96*pow(1. - nv, 5.);
+  vec3 cy = lin(vec3(0., 212., 245.)/255.);
+  vec3 deep = lin(vec3(0., .2, .5));
+  vec3 q = (p - vec3(uS.xy, 0.)) / uS.z;
+  float lower = smoothstep(.6, -.9, q.y);
+  vec3 body = mix(deep, cy, clamp(.2 + .55*nv + .35*lower, 0., 1.));
+  vec2 cp = vec2(-.16, -.5);
+  float caus = exp(-dot(q.xy - cp, q.xy - cp) * 6.);
+  body += cy * caus * .75 + vec3(.55, 1., 1.) * caus*caus * .5;
+  float band = smoothstep(.12, .42, nv) * (1. - smoothstep(.42, .8, nv)) * smoothstep(0., .8, q.y);
+  body *= (1. - band*.35) * (.8 + .5*uK.z);
+  body *= mix(.72, 1., smoothstep(-.01, .1, sdFinger(p)));
+  vec3 R = reflect(rd, n);
+  vec3 env = lin(vec3(.86, .92, 1.)) * smoothstep(.35, .92, R.y) * .85;
+  env += lin(vec3(27., 63., 224.)/255.) * (.55*smoothstep(.2, -.8, R.y) + .25*smoothstep(.2, .8, abs(R.x)));
+  float t = .004;
+  for (int i = 0; i < 40; i++){
+    vec3 pp = p + R*t;
+    float h = sdFinger(pp);
+    if (h < .0008){ env = shadeFinger(pp, nrmF(pp), R) * 1.1; break; }
+    t += h;
+    if (t > 1.6) break;
+  }
+  vec3 col = body*(1. - fr) + env*fr + env*.05;
+  float s1 = max(dot(R, L1), 0.);
+  col += pow(s1, 280.)*6. + pow(s1, 36.)*.22;
+  col += vec3(.8, .95, 1.) * pow(max(dot(R, L2), 0.), 28.) * .35 * (1. - nv);
+  col += cy * uK.w;
+  return col;
+}
+
+void main(){
+  vec2 w = (gl_FragCoord.xy - uRes*.5) / (uRes.y*.5);
+  vec3 ro = vec3(0., 0., 6.);
+  vec3 rd = normalize(vec3(w, 0.) - ro);
+  vec3 col = background(w);
+  float t = 5.0, hitId = 0., best = 1e3, bestT = 0., bestId = 0.;
+  for (int i = 0; i < 120; i++){
+    vec2 h = map(ro + rd*t);
+    if (h.x < best){ best = h.x; bestT = t; bestId = h.y; }
+    if (h.x < .0003){ hitId = h.y; break; }
+    t += h.x;
+    if (t > 7.5) break;
+  }
+  float px = 1.25 / (uRes.y*.5);
+  float cover = hitId > .5 ? 1. : smoothstep(px, 0., best);
+  if (cover > 0.){
+    float tt = hitId > .5 ? t : bestT;
+    float id = hitId > .5 ? hitId : bestId;
+    vec3 p = ro + rd*tt;
+    vec3 n = nrm(p);
+    vec3 s = id < 1.5 ? shadeFinger(p, n, rd) : shadeBall(p, n, rd);
+    col = mix(col, s, cover);
+  }
+  if (uS.w > .5){
+    float d = length((w - uS.xy) / vec2(1. + .5*uK.x, 1. - uK.x)) - uS.z;
+    col += lin(vec3(0., 212., 245.)/255.) * exp(-max(d, 0.)*13.) * .09 * (.5 + .9*uK.z + 2.*uK.w);
+  }
+  col = col / (1. + col*.1) * 1.05;
+  col = pow(max(col, 0.), vec3(1./2.2));
+  col += (hash(gl_FragCoord.xy + fract(uT)) - .5) / 255.;
+  gl_FragColor = vec4(col, 1.);
+}
+</script>
+
+<script src="vendor/gsap.min.js"></script>
+<script>
+const W = 1080, H = 1920, FPS = 30, DUR = 24;
+const $ = s => document.querySelector(s);
+const RENDER = new URLSearchParams(location.search).has('render');
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const prog = (t, a, b) => clamp01((t - a) / (b - a));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = n => gsap.parseEase(n);
+const expoOut = E('expo.out'), quartIO = E('power3.inOut'), p2i = E('power2.in'), p2o = E('power2.out'), p3i = E('power3.in');
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------- WebGL: macro do dedo e da esfera ---------- */
+const cv = $('#gl');
+const gl = cv.getContext('webgl', { preserveDrawingBuffer: true, antialias: false });
+function shader(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+const prg = gl.createProgram();
+gl.attachShader(prg, shader(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));
+gl.attachShader(prg, shader(gl.FRAGMENT_SHADER, $('#frag').textContent));
+gl.linkProgram(prg); gl.useProgram(prg);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+const U = {}; for (const n of ['uRes', 'uT', 'uF', 'uS', 'uK']) U[n] = gl.getUniformLocation(prg, n);
+gl.viewport(0, 0, W, H); gl.uniform2f(U.uRes, W, H);
+
+const PXU = 960, wx = x => (x - 540) / PXU, wy = y => (960 - y) / PXU;
+const AXIS = wx(425), MEET = wy(900), G0 = .8, G1 = .012, R = .2;
+const SYM = { x: 540, y: 860, s: 2.6 };
+const PUP = { x: SYM.x + (79.0256 - 134) * SYM.s, y: SYM.y + (111.744 - 93.5) * SYM.s, r: 16.0342 * SYM.s };
+
+// tempo "vivo" da cena: para nos congelamentos (7–15 s e 17,5–18 s)
+const drift = t => t < 7 ? t : t < 15 ? 7 : t < 17.5 ? t - 8 : t < 18 ? 9.5 : t - 8.5;
+
+function macroState(t){
+  const d = drift(t);
+  const trem = t < 7 ? 1 : (t >= 15 && t < 17.5 ? .6 * prog(t, 15, 15.6) : 0);
+  let gap = t < 1.2 ? G0 : t < 7 ? lerp(G0, G1, expoOut(prog(t, 1.2, 7))) : G1;
+  let lift = 0;
+  if (t >= 18){
+    gap = t < 18.07 ? lerp(G1, -.075, p2i(prog(t, 18, 18.07))) : lerp(-.075, .024, p2o(prog(t, 18.07, 18.38)));
+    lift = p3i(prog(t, 18.52, 18.95)) * 1.7;
+  }
+  const sTop = MEET - Math.max(gap, G1) / 2;
+  const dt = t - 18;
+  const sq = dt > 0 ? .2 * Math.exp(-5.5 * dt) * Math.sin(2 * Math.PI * 3.1 * dt) : 0;
+  const push = Math.max(0, -gap) * .35;
+  let cx = AXIS, cy = sTop - R - push + Math.sin(d * 1.7) * .0018 * trem, r = R;
+  if (t >= 18.6){
+    const k = quartIO(prog(t, 18.6, 19.0)), u = 1 - k;
+    const x0 = AXIS, y0 = MEET - G1 / 2 - R, x2 = wx(PUP.x), y2 = wy(PUP.y);
+    const x1 = lerp(x0, x2, .3) - .06, y1 = Math.max(y0, y2) + .16;
+    cx = u*u*x0 + 2*u*k*x1 + k*k*x2; cy = u*u*y0 + 2*u*k*y1 + k*k*y2;
+    r = lerp(R, PUP.r / PXU, k);
+  }
+  return {
+    d, contactY: 960 - sTop * PXU,
+    F: [AXIS + (Math.sin(d * 9.1) * .0012 + Math.sin(d * 13.7 + 2) * .0007) * trem,
+        sTop + gap + lift + (Math.sin(d * 7.3 + 1) * .0015 + Math.sin(d * 3.1) * .0007) * trem, -.06],
+    S: [cx, cy, r, t < 19 ? 1 : 0],
+    K: [sq, t >= 17.99 ? .035 : .0001, 1 - Math.min(1, Math.max(gap, 0) / .35) + (dt > 0 ? Math.exp(-dt * 3) * .6 : 0), dt > 0 ? Math.exp(-dt * 11) * .7 : 0]
+  };
+}
+function drawGL(m){
+  gl.uniform1f(U.uT, m.d);
+  gl.uniform3f(U.uF, ...m.F);
+  gl.uniform4f(U.uS, ...m.S);
+  gl.uniform4f(U.uK, ...m.K);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+/* ---------- Feed de posts genéricos ---------- */
+const feed = $('#feed'), scroller = $('#scroller'), macro = $('#macro'), vStd = $('#vblurStd');
+const NPOSTS = 10; // o post 0 e o post 10 são a cena macro
+(() => {
+  const r = rng(7), tone = () => Math.round(46 + r() * 60);
+  for (let i = 1; i < NPOSTS; i++){
+    const p = document.createElement('div'); p.className = 'post'; p.style.top = i * 1920 + 'px';
+    const a = tone(), b = tone(), c = tone() + 30;
+    p.style.background = `radial-gradient(circle at ${20 + r() * 60}% ${25 + r() * 30}%, rgb(${c},${c},${c}) 0, transparent 46%), linear-gradient(170deg, rgb(${a},${a},${a + 4}), rgb(${b},${b},${b + 4}))`;
+    const s = document.createElement('i'), sw = 460 + r() * 200, sh = 520 + r() * 260, st = tone() + 40;
+    Object.assign(s.style, { left: 540 - sw / 2 + 'px', top: 860 - sh / 2 + 'px', width: sw + 'px', height: sh + 'px', borderRadius: i % 3 ? '48px' : '50%', background: `rgb(${st},${st},${st})` });
+    p.appendChild(s);
+    for (let k = 0; k < 2; k++){
+      const bar = document.createElement('i'); const bw = 300 + r() * 360;
+      Object.assign(bar.style, { left: 540 - bw / 2 + 'px', top: 1330 + k * 70 + 'px', width: bw + 'px', height: '34px', borderRadius: '17px', background: `rgb(${st - 20},${st - 20},${st - 20})` });
+      p.appendChild(bar);
+    }
+    feed.appendChild(p);
+  }
+})();
+const SNAP = [10.55, 11.08, 11.5, 11.86, 12.18, 12.48, 12.78, 13.1, 13.46, 13.95], LAND = 14.75;
+function scrollOffset(t){
+  if (t < SNAP[0]) return 0;
+  for (let i = 0; i < SNAP.length; i++){
+    const last = i === SNAP.length - 1, a = SNAP[i], b = last ? LAND : SNAP[i + 1];
+    if (t < b) return 1920 * (i + (last ? E('back.out(1.3)')(prog(t, a, b)) : quartIO(clamp01(prog(t, a, b) / .78))));
+  }
+  return 1920 * NPOSTS;
+}
+
+/* ---------- Partículas e onda de choque ---------- */
+const fx = $('#fx').getContext('2d');
+const PARTS = (() => { const r = rng(42); return Array.from({ length: 130 }, () => {
+  const phi = r() * Math.PI * 2, el = r() * .95 - .2, sp = 380 + r() * 1300;
+  return { vx: Math.cos(phi) * Math.cos(el) * sp, vy: -Math.sin(el) * sp + Math.sin(phi) * Math.cos(el) * sp * .22, life: .45 + r() * .8, size: 1.2 + r() * 2.8, white: r() < .4 };
+}); })();
+function drawFX(t, m){
+  fx.clearRect(0, 0, W, H);
+  const dt = t - 18;
+  if (dt < 0 || dt > 1.4) return;
+  const cx = 425, cy = m.contactY;
+  fx.save(); fx.globalCompositeOperation = 'lighter';
+  const g = fx.createRadialGradient(cx, cy, 0, cx, cy, 260);
+  g.addColorStop(0, `rgba(160,245,255,${.55 * Math.exp(-dt * 9)})`); g.addColorStop(1, 'rgba(0,212,245,0)');
+  fx.fillStyle = g; fx.fillRect(cx - 260, cy - 260, 520, 520);
+  for (const [delay, scale, a0] of [[0, 1, 1], [.07, .62, .55]]){
+    const k = (dt - delay) / .8; if (k <= 0 || k >= 1) continue;
+    const rx = 30 + 600 * scale * expoOut(k), a = Math.pow(1 - k, 1.4) * a0;
+    fx.shadowColor = 'rgba(0,212,245,.9)'; fx.shadowBlur = 28;
+    for (const [from, to, f] of [[Math.PI, Math.PI * 2, .35], [0, Math.PI, 1]]){
+      fx.lineWidth = 7 * (1 - k) + 1; fx.strokeStyle = `rgba(0,212,245,${a * f})`;
+      fx.beginPath(); fx.ellipse(cx, cy, rx, rx * .26, 0, from, to); fx.stroke();
+      fx.lineWidth *= .3; fx.strokeStyle = `rgba(235,255,255,${a * f * .7})`; fx.stroke();
+    }
+  }
+  fx.shadowBlur = 0; fx.lineCap = 'round';
+  const pos = (p, s) => { const k = 3.2, e = (1 - Math.exp(-k * s)) / k; return [cx + p.vx * e, cy + p.vy * e + 300 * s * s]; };
+  for (const p of PARTS){
+    if (dt > p.life) continue;
+    const a = Math.pow(1 - dt / p.life, 1.5), [x1, y1] = pos(p, dt), [x0, y0] = pos(p, Math.max(0, dt - .022));
+    fx.strokeStyle = p.white ? `rgba(255,255,255,${a})` : `rgba(0,212,245,${a})`;
+    fx.lineWidth = p.size; fx.beginPath(); fx.moveTo(x0, y0); fx.lineTo(x1 + .01, y1); fx.stroke();
+  }
+  fx.restore();
+}
+
+/* ---------- Grão de filme ---------- */
+const gx = $('#grain').getContext('2d');
+const GRAIN = Array.from({ length: 6 }, (_, k) => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const x = c.getContext('2d'), im = x.createImageData(256, 256), r = rng(k + 11);
+  for (let i = 0; i < im.data.length; i += 4){ const v = 128 + (r() - .5) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  x.putImageData(im, 0, 0); return gx.createPattern(c, 'repeat');
+});
+function drawGrain(t){
+  const f = (t >= 7 && t < 8) ? 210 : (t >= 17.5 && t < 18) ? 525 : Math.floor(t * FPS);
+  const r = rng(f * 7 + 3);
+  gx.setTransform(1, 0, 0, 1, -Math.floor(r() * 256), -Math.floor(r() * 256));
+  gx.fillStyle = GRAIN[f % 6]; gx.fillRect(0, 0, W + 256, H + 256);
+}
+
+/* ---------- Símbolo (SVG real; só transformações) ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const host = $('#sym'); host.appendChild($('#simbolo').content.cloneNode(true));
+const svg = host.querySelector('svg');
+const L = [...svg.children].filter(e => e.tagName.toLowerCase() !== 'defs');
+const wrap = list => { const g = document.createElementNS(NS, 'g'); list[0].before(g); list.forEach(e => g.appendChild(e)); return g; };
+const pupil1 = wrap(L.slice(7, 9)), iris1 = wrap([L[6], pupil1]), eye1 = wrap([...L.slice(1, 6), iris1]);
+const pupil2 = wrap(L.slice(11, 13)), iris2 = wrap([L[10], pupil2]), eye2 = wrap([L[9], iris2]);
+const crown = wrap([L[0]]), horn = wrap([L[13]]);
+const logoHost = $('#logo-host'); logoHost.appendChild($('#logo').content.cloneNode(true));
+const hasLogo = !!logoHost.querySelector('svg');
+const pglow = $('#pglow'); Object.assign(pglow.style, { left: PUP.x + 'px', top: PUP.y + 'px', width: PUP.r * 2 + 'px', height: PUP.r * 2 + 'px', margin: `${-PUP.r}px 0 0 ${-PUP.r}px` });
+
+/* ---------- Texto ---------- */
+const cap = $('#cap');
+const SENTS = [
+  { out: 6.72, parts: [[2.5, 'Você'], [3.2, 'tá esperando'], [4.0, 'um dedo'], [4.8, 'encostar numa'], [5.12, 'bolinha.', 1]] },
+  { out: 8.45, parts: [[7.2, 'Faz'], [7.38, '7 segundos.', 1]] },
+  { out: 10.95, parts: [[9.0, 'Isso tem nome:'], [9.48, 'retenção.', 1]] },
+  { out: 14.5, parts: [[11.5, 'O post do seu negócio'], [12.5, 'ganha bem menos'], [12.86, 'que isso.', 1]] },
+  { out: 17.12, parts: [[15.2, 'A não ser que'], [15.68, 'alguém pense nele assim.', 1]] },
+];
+
+/* ---------- Timeline GSAP (determinística: tudo por seek) ---------- */
+const st = { zoom: 0, ui: 0, endR: 0 };
+const tl = gsap.timeline({ paused: true });
+const ft = (target, from, to, at) => tl.fromTo(target, from, { ...to, immediateRender: false }, at);
+const wordIn = (el, at, op) => ft(el, { opacity: 0, y: 16, filter: 'blur(6px)' }, { opacity: op, y: 0, filter: 'blur(0px)', duration: .5, ease: 'power3.out' }, at);
+
+for (const s of SENTS){
+  const el = document.createElement('div'); el.className = 'sent'; cap.appendChild(el);
+  for (const [at, txt, bold] of s.parts) txt.split(' ').forEach((w, j) => {
+    const span = document.createElement('span'); span.className = bold ? 'w b' : 'w'; span.textContent = w; el.appendChild(span);
+    wordIn(span, at + j * .11, bold ? 1 : .86);
+  });
+  gsap.set(el, { yPercent: -50 });
+  ft(el, { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: .32, ease: 'power2.in' }, s.out);
+}
+const counter = $('#counter');
+ft(counter, { opacity: 0 }, { opacity: .4, duration: .25, ease: 'none' }, 1.2);
+ft(counter, { opacity: .4 }, { opacity: 0, duration: .4, ease: 'power2.in' }, 8.0);
+
+ft(st, { zoom: 0 }, { zoom: 1, duration: 2.1, ease: 'power3.inOut' }, 8.0);
+ft(st, { ui: 0 }, { ui: 1, duration: .8, ease: 'power2.out' }, 8.8);
+ft(st, { ui: 1 }, { ui: 0, duration: .7, ease: 'power2.in' }, 14.95);
+ft(st, { zoom: 1 }, { zoom: 0, duration: 2.15, ease: 'power3.inOut' }, 15.0);
+
+gsap.set(host, { scale: SYM.s });
+gsap.set(eye1, { scale: 0, svgOrigin: '79.03 111.74' });
+gsap.set(eye2, { scale: 0, svgOrigin: '196.99 114.02' });
+gsap.set(crown, { scale: 0, svgOrigin: '131 84' });
+gsap.set(horn, { scale: 0, svgOrigin: '214 62' });
+ft(eye1, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .6, ease: 'elastic.out(1,.5)' }, 19.0);
+ft(eye2, { scale: 0 }, { scale: 1, duration: .75, ease: 'elastic.out(1.1,.4)' }, 19.28);
+ft(crown, { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(2.2)' }, 19.4);
+ft(horn, { scale: 0 }, { scale: 1, duration: .45, ease: 'back.out(3)' }, 19.48);
+for (const [iris, o] of [[iris1, '72.15 114.02'], [iris2, '196.99 114.32']]){
+  ft(iris, { scaleY: 1, svgOrigin: o }, { scaleY: .06, duration: .075, ease: 'power2.in' }, 19.74);
+  ft(iris, { scaleY: .06, svgOrigin: o }, { scaleY: 1, duration: .14, ease: 'power2.out' }, 19.815);
+}
+ft([pupil1, pupil2], { x: 0, y: 0 }, { x: -3, y: -2.5, duration: .25, ease: 'power2.out' }, 19.45);
+ft([pupil1, pupil2], { x: -3, y: -2.5 }, { x: 0, y: 0, duration: .3, ease: 'power2.inOut' }, 19.98);
+
+ft(st, { endR: 0 }, { endR: 1, duration: .8, ease: 'expo.inOut' }, 20.0);
+ft(host, { y: 0, scale: SYM.s }, { y: -92, scale: 2.15, duration: .85, ease: 'power3.inOut' }, 20.15);
+if (hasLogo){
+  ft(host, { opacity: 1 }, { opacity: 0, duration: .35, ease: 'power2.in' }, 20.4);
+  ft(logoHost, { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: .7, ease: 'back.out(1.6)' }, 20.5);
+}
+'Dê um boop na sua empresa.'.split(' ').forEach((w, j) => {
+  const span = document.createElement('span'); span.className = 'w'; span.textContent = w; $('#cta').appendChild(span);
+  wordIn(span, 20.8 + j * .09, 1);
+});
+ft('#foot', { opacity: 0, y: 10 }, { opacity: .72, y: 0, duration: .6, ease: 'power2.out' }, 21.5);
+ft([pupil1, pupil2], { x: 0, y: 0 }, { x: 1.5, y: 4.5, duration: .35, ease: 'power2.inOut' }, 21.1);
+ft([pupil1, pupil2], { x: 1.5, y: 4.5 }, { x: 0, y: 0, duration: .4, ease: 'power2.inOut' }, 22.7);
+tl.set({}, {}, DUR);
+
+/* ---------- Quadro ---------- */
+const world = $('#world'), phone = $('#phone'), screen = $('#screen'), igui = $('#igui'), island = $('#island'), endbg = $('#endbg');
+function frame(t){
+  tl.seek(t, false);
+  const m = macroState(t);
+  drawGL(m);
+  drawFX(t, m);
+  drawGrain(t);
+  counter.textContent = '00:0' + Math.min(7, Math.max(1, Math.floor(t)));
+
+  const z = st.zoom, s = lerp(1, .5, z), fl = z * Math.sin(t * 1.25) * 8;
+  world.style.transform = z ? `perspective(2400px) translate(${-205 * z}px, ${-14 * z + fl}px) rotateY(${z * (7 + 1.5 * Math.sin(t * .8))}deg) rotateX(${z * 3}deg) scale(${s})` : 'none';
+  phone.style.visibility = z ? 'visible' : 'hidden';
+  screen.style.borderRadius = 118 * z + 'px';
+  igui.style.opacity = island.style.opacity = st.ui;
+
+  const o = scrollOffset(t);
+  feed.style.transform = `translateY(${-o}px)`;
+  macro.style.transform = `translateY(${o < 1920 * 1.5 ? -o : 1920 * NPOSTS - o}px)`;
+  const v = Math.abs(scrollOffset(t + 1 / 60) - scrollOffset(t - 1 / 60)) * 30;
+  const blur = Math.min(70, v * .012);
+  vStd.setAttribute('stdDeviation', `0 ${blur.toFixed(2)}`);
+  scroller.style.filter = blur > .5 ? 'url(#vblur)' : 'none';
+
+  pglow.style.opacity = t < 19 ? 0 : 1 - p2i(prog(t, 19.02, 19.45));
+  endbg.style.clipPath = `circle(${st.endR * 2300}px at 540px 860px)`;
+}
+
+window.ready = document.fonts.ready.then(() => frame(0));
+window.seek = t => { frame(t); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); };
+
+if (!RENDER){
+  const stage = $('#stage');
+  const fit = () => { const k = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `translate(${(innerWidth - W * k) / 2}px, ${(innerHeight - H * k) / 2}px) scale(${k})`; };
+  fit(); addEventListener('resize', fit);
+  const au = new Audio('boop-que-nao-chega.wav'); au.loop = true;
+  let t0 = performance.now();
+  addEventListener('click', () => { au.currentTime = 0; t0 = performance.now(); au.play().catch(() => {}); });
+  (function loop(){ frame(au.paused ? ((performance.now() - t0) / 1000) % DUR : au.currentTime % DUR); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>
