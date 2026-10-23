@@ -4,6 +4,28 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/jabez",
+      "destination": "/link/?utm_source=instagram&utm_medium=bio&utm_campaign=jabez",
+      "permanent": false
+    },
+    {
+      "source": "/jabez/",
+      "destination": "/link/?utm_source=instagram&utm_medium=bio&utm_campaign=jabez",
+      "permanent": false
+    },
+    {
+      "source": "/boop",
+      "destination": "/link/?utm_source=instagram&utm_medium=bio&utm_campaign=boop",
+      "permanent": false
+    },
+    {
+      "source": "/boop/",
+      "destination": "/link/?utm_source=instagram&utm_medium=bio&utm_campaign=boop",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

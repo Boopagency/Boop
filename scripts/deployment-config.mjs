@@ -7,6 +7,10 @@ const config = {
   outputDirectory: 'dist',
   cleanUrls: true,
   trailingSlash: true,
+  // Links curtos da bio: cada perfil do Instagram leva a /link/ com a UTM que diz de onde veio o lead.
+  redirects: ['jabez', 'boop'].flatMap(profile => [`/${profile}`, `/${profile}/`].map(source => (
+    { source, destination: `/link/?utm_source=instagram&utm_medium=bio&utm_campaign=${profile}`, permanent: false }
+  ))),
   headers: [
     { source: '/(.*)', headers: Object.entries(securityHeaders).map(([key, value]) => ({ key, value })) },
     { source: '/404', headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }] },
