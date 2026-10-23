@@ -50,7 +50,7 @@ const watcher = new IntersectionObserver(entries => {
 function observeActions() {
   watcher.disconnect();
   visible.clear();
-  document.querySelectorAll('.bio-panel:not([hidden]) .bio-actions, .bio-footer').forEach(el => watcher.observe(el));
+  document.querySelectorAll('.bio-panel:not([hidden]) .bio-actions, .bio-closing').forEach(el => watcher.observe(el));
 }
 observeActions();
 
