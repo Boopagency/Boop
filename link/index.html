@@ -19,7 +19,7 @@
     <main id="conteudo" class="bio-content">
       <div class="bio-top bio-in">
         <span>Gestão de marca &amp; crescimento</span>
-        <a href="/" aria-label="Boop — conheça o site"><img src="/assets/logo-light.webp" width="330" height="164" alt="Boop" /></a>
+        <img src="/assets/logo-light.webp" width="330" height="164" alt="Boop" />
       </div>
 
       <ul class="bio-stats bio-in" aria-label="A Boop em números">
@@ -38,33 +38,52 @@
 
       <section class="bio-panel" role="tabpanel" id="painel-empresa" aria-labelledby="aba-empresa">
         <h2>Uma direção <strong>para cada marca.</strong></h2>
-        <div class="bio-cases">
-          <figure><img src="/assets/bio/site-hertmann.webp" srcset="/assets/bio/site-hertmann-720.webp 720w, /assets/bio/site-hertmann.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Hertmann, alta joalheria." decoding="async" /><figcaption>Site · Hertmann</figcaption></figure>
-          <figure><img src="/assets/bio/site-velmont.webp" srcset="/assets/bio/site-velmont-720.webp 720w, /assets/bio/site-velmont.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Velmont, marcas e patentes." loading="lazy" decoding="async" /><figcaption>Site · Velmont</figcaption></figure>
-          <figure><img src="/assets/bio/site-barbara.webp" srcset="/assets/bio/site-barbara-720.webp 720w, /assets/bio/site-barbara.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Bárbara Fonseca, médica veterinária." loading="lazy" decoding="async" /><figcaption>Site · Bárbara Fonseca</figcaption></figure>
-        </div>
-        <p class="bio-caption">Hertmann, Velmont e Bárbara Fonseca. Marcas diferentes, um olhar para cada uma.</p>
         <p class="bio-text">A conversa começa pelo negócio, não pela entrega. Conte o que precisa andar e a equipe da Boop responde pelo WhatsApp.</p>
         <div class="bio-actions">
           <a class="bio-cta" href="https://wa.me/5542999379186?text=Oi%2C%20Boop!%20Vim%20pelo%20link%20da%20bio." data-lead><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#icone-whatsapp" /></svg>Vamos conversar</a>
-          <a class="bio-more" href="/#cases">Ver os cases <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a>
+          <a class="bio-more" href="#cases">Ver os cases <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
         </div>
       </section>
 
       <section class="bio-panel" role="tabpanel" id="painel-profissional" aria-labelledby="aba-profissional" hidden>
         <h2>Seu nome <strong>também é marca.</strong></h2>
-        <div class="bio-cases bio-cases-single">
-          <figure><img src="/assets/bio/site-barbara.webp" srcset="/assets/bio/site-barbara-720.webp 720w, /assets/bio/site-barbara.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Bárbara Fonseca, médica veterinária." loading="lazy" decoding="async" /><figcaption>Site · Bárbara Fonseca</figcaption></figure>
-        </div>
-        <p class="bio-caption">Bárbara Fonseca, médica veterinária: site, identidade visual e conteúdo.</p>
         <p class="bio-text">Posicionamento, conteúdo e presença digital para quem quer ser lembrado pelo que faz. Conte o seu momento e a equipe da Boop responde pelo WhatsApp.</p>
         <div class="bio-actions">
           <a class="bio-cta" href="https://wa.me/5542999379186?text=Oi%2C%20Boop!%20Vim%20pelo%20link%20da%20bio." data-lead><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#icone-whatsapp" /></svg>Vamos conversar</a>
-          <a class="bio-more" href="/">Conheça a Boop <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></a>
+          <a class="bio-more" href="#cases">Ver os cases <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
         </div>
       </section>
 
-      <footer class="bio-footer"><a href="https://www.instagram.com/boop.oficial_/" target="_blank" rel="noopener noreferrer">@boop.oficial_</a><a href="/">deumboop.com.br</a><a href="/privacidade/">Privacidade</a></footer>
+      <section class="bio-cases" id="cases" aria-labelledby="cases-titulo">
+        <div class="bio-cases-head"><h2 id="cases-titulo">Cases</h2><span>Marcas diferentes, um olhar para cada uma.</span></div>
+        <article class="bio-case">
+          <img src="/assets/bio/site-hertmann.webp" srcset="/assets/bio/site-hertmann-720.webp 720w, /assets/bio/site-hertmann.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Hertmann, alta joalheria." loading="lazy" decoding="async" />
+          <span class="bio-case-tag">Alta joalheria · Site</span>
+          <h3>Hertmann</h3>
+          <p>O detalhe encontra o digital.</p>
+          <a href="https://hertmann.vercel.app/" target="_blank" rel="noopener noreferrer">Ver o site <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </article>
+        <article class="bio-case">
+          <img src="/assets/bio/site-velmont.webp" srcset="/assets/bio/site-velmont-720.webp 720w, /assets/bio/site-velmont.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Velmont, marcas e patentes." loading="lazy" decoding="async" />
+          <span class="bio-case-tag">Marcas e patentes · Site e social media</span>
+          <h3>Velmont</h3>
+          <p>Valor construído. Presença à altura.</p>
+          <a href="https://www.grupovelmont.com/" target="_blank" rel="noopener noreferrer">Ver o site <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </article>
+        <article class="bio-case">
+          <img src="/assets/bio/site-barbara.webp" srcset="/assets/bio/site-barbara-720.webp 720w, /assets/bio/site-barbara.webp 1200w" sizes="(min-width: 1024px) 520px, 100vw" width="1200" height="600" alt="Página inicial do site da Bárbara Fonseca, médica veterinária." loading="lazy" decoding="async" />
+          <span class="bio-case-tag">Médica veterinária · Site, identidade e social media</span>
+          <h3>Bárbara Fonseca</h3>
+          <p>Marca pessoal, do nome ao site.</p>
+          <a href="https://barbarafonseca.vercel.app/" target="_blank" rel="noopener noreferrer">Ver o site <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </article>
+        <div class="bio-closing">
+          <p>Quer a sua marca aqui?</p>
+          <a class="bio-cta" href="https://wa.me/5542999379186?text=Oi%2C%20Boop!%20Vim%20pelo%20link%20da%20bio." data-lead><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#icone-whatsapp" /></svg>Vamos conversar</a>
+        </div>
+      </section>
+
+      <footer class="bio-footer"><a href="https://www.instagram.com/boop.oficial_/" target="_blank" rel="noopener noreferrer">@boop.oficial_</a><a href="/privacidade/" target="_blank" rel="noopener">Privacidade</a></footer>
     </main>
   </div>
 
@@ -92,7 +111,7 @@
       <label class="bio-trap" aria-hidden="true">Não preencha<input name="site" tabindex="-1" autocomplete="off" /></label>
       <p class="bio-error" role="alert"></p>
       <button class="bio-cta bio-submit" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#icone-whatsapp" /></svg><span>Continuar no WhatsApp</span></button>
-      <p class="bio-legal">A Boop usa esses dados só para responder você. <a href="/privacidade/">Privacidade</a></p>
+      <p class="bio-legal">A Boop usa esses dados só para responder você. <a href="/privacidade/" target="_blank" rel="noopener">Privacidade</a></p>
     </form>
   </dialog>
 
