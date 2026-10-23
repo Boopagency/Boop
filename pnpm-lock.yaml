@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/herr-von-muellerhoff':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/poppins':
         specifier: ^5.2.6
         version: 5.3.0
@@ -184,6 +187,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/herr-von-muellerhoff@5.3.0':
+    resolution: {integrity: sha512-VOE/9IbMILLfTJwei5l73IFNHMI0t551/QvI+3/cxKOGj8EKjCBO48NlbAVOuRDGbZd/EGn7Dkl8Yv+Jh06IJA==}
 
   '@fontsource/poppins@5.3.0':
     resolution: {integrity: sha512-cms1nM7U6SN8epIV1WMVOV8VsA645aSm3wHfzIQnkk188U341ThbJGSl2Sv54V29gnDbT2arMPfLzvVIIVCceQ==}
@@ -522,6 +528,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.2':
     optional: true
+
+  '@fontsource/herr-von-muellerhoff@5.3.0': {}
 
   '@fontsource/poppins@5.3.0': {}
 

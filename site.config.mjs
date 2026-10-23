@@ -14,5 +14,6 @@ export const site = {
 export const pages = [
   { path: '/', file: 'index.html', title: 'Gestão de marca e crescimento | Boop', description: site.description, index: true },
   { path: '/privacidade/', file: 'privacidade/index.html', title: 'Privacidade | Boop', description: 'Como funcionam o contato por e-mail, os conteúdos externos e a privacidade neste site da Boop.', index: true },
+  { path: '/link/', file: 'link/index.html', title: 'Jabez Oliveira | Boop', description: 'Jabez Oliveira, fundador e CEO da Boop. Gestão de marca e crescimento: converse com a equipe pelo WhatsApp.', index: false },
   { path: '/404.html', file: '404.html', title: 'Página não encontrada | Boop', description: 'Não encontramos esta página. Volte ao início ou converse com a Boop.', index: false },
 ];

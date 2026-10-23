@@ -1,0 +1,275 @@
+@import '@fontsource/poppins/latin-400.css';
+@import '@fontsource/poppins/latin-500.css';
+@import '@fontsource/poppins/latin-600.css';
+@import '@fontsource/herr-von-muellerhoff/latin-400.css';
+@import './tokens.css';
+
+/* Link da bio: retrato à esquerda (ou no topo, no celular), conversa à direita. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--fundo);
+  color: var(--tinta);
+  font-family: var(--fonte);
+  font-size: var(--tipo-corpo);
+  line-height: var(--lh-corpo);
+  -webkit-font-smoothing: antialiased;
+}
+a, button { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; }
+img { display: block; max-width: 100%; }
+svg { flex-shrink: 0; }
+:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+.skip-link {
+  position: fixed; top: 8px; left: 8px; z-index: var(--z-cursor);
+  padding: 16px; background: var(--sinal); color: var(--sinal-tinta);
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: none; }
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: var(--z-cursor); pointer-events: none;
+  background: url('/assets/grain.svg'); opacity: .05; mix-blend-mode: overlay;
+}
+
+.bio { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100svh; }
+
+/* Retrato ---------------------------------------------------------------- */
+
+.bio-media { position: sticky; top: 0; height: 100svh; overflow: hidden; margin: 0; }
+.bio-photo {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 94%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 94%);
+  transform-origin: 50% 20%;
+  animation: bio-breathe 24s var(--ease-padrao) infinite alternate;
+}
+.bio-sign {
+  position: absolute; left: 7%; bottom: 7%; margin: 0;
+  padding: .3em .35em .2em .2em;
+  font-family: 'Herr Von Muellerhoff', cursive; font-weight: 400;
+  font-size: clamp(88px, 8.4vw, 150px); line-height: 1; letter-spacing: 0;
+  white-space: nowrap; color: var(--cor-osso-100);
+  transform: rotate(-6deg); transform-origin: 0 100%;
+  animation: bio-write 1.6s var(--ease-entrada) .35s both;
+}
+
+/* Conversa --------------------------------------------------------------- */
+
+.bio-content {
+  width: 100%; max-width: 600px; margin: 0 auto;
+  padding: clamp(32px, 6vh, 80px) clamp(24px, 4vw, 56px) 40px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.bio-in { animation: bio-rise var(--dur-4) var(--ease-entrada) both; }
+.bio-in:nth-child(2) { animation-delay: calc(var(--stagger) * 2); }
+.bio-in:nth-child(3) { animation-delay: calc(var(--stagger) * 4); }
+.bio-in:nth-child(4) { animation-delay: calc(var(--stagger) * 6); }
+
+.bio-top {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--esp-4);
+  padding-bottom: var(--esp-5); border-bottom: var(--traco-fino) solid var(--traco);
+  font-size: var(--tipo-corpo-p); font-weight: var(--peso-medio); letter-spacing: -.005em;
+}
+.bio-top a { display: flex; align-items: center; min-height: 44px; }
+.bio-top img { width: auto; height: 22px; }
+
+.bio-stats {
+  list-style: none; margin: 0; padding: var(--esp-5) 0 var(--esp-6);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-4);
+}
+.bio-stats li { display: flex; flex-direction: column; gap: var(--esp-1); }
+.bio-stats strong {
+  font-size: clamp(26px, 2.5vw, 36px); line-height: 1.1; font-weight: var(--peso-medio);
+  letter-spacing: var(--tr-display);
+}
+.bio-stats span { font-size: 13px; line-height: 1.35; color: var(--tinta-2); max-width: 16ch; }
+
+.bio-switch {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr;
+  padding: 5px; border-radius: var(--raio-total);
+  background: var(--cor-navy-900); border: var(--traco-fino) solid var(--traco);
+}
+.bio-switch button {
+  position: relative; z-index: 1; min-height: 50px; padding: 0 var(--esp-3);
+  border: 0; border-radius: var(--raio-total); background: none; cursor: pointer;
+  font-size: var(--tipo-corpo-p); font-weight: var(--peso-medio); color: var(--tinta-2);
+  transition: color var(--dur-2) var(--ease-padrao);
+}
+.bio-switch button[aria-selected="true"] { color: var(--cor-navy-800); }
+.bio-switch-thumb {
+  position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px);
+  border-radius: var(--raio-total); background: var(--cor-osso-100);
+  transition: transform var(--dur-3) var(--ease-entrada);
+}
+.bio-switch[data-perfil="professional"] .bio-switch-thumb { transform: translateX(100%); }
+
+.bio-panel { padding-top: var(--esp-6); }
+.bio-panel { animation: bio-swap var(--dur-4) var(--ease-entrada) both; }
+.bio-panel h2 {
+  margin: 0 0 var(--esp-5); max-width: 14ch;
+  font-size: clamp(36px, 3.3vw, 48px); line-height: 1.02; font-weight: var(--peso-regular);
+  letter-spacing: -.04em;
+}
+.bio-panel h2 strong { font-weight: var(--peso-semi); }
+
+.bio-cases { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--fundo-2); }
+.bio-cases figure { position: absolute; inset: 0; margin: 0; opacity: 0; animation: bio-cases 13.5s linear infinite backwards; }
+.bio-cases figure:nth-child(2) { animation-delay: 4.5s; }
+.bio-cases figure:nth-child(3) { animation-delay: 9s; }
+.bio-cases-single figure { animation: none; opacity: 1; }
+.bio-cases img { width: 100%; height: 100%; object-fit: cover; }
+.bio-cases figcaption {
+  position: absolute; left: var(--esp-3); bottom: var(--esp-3);
+  padding: 6px 12px; border-radius: var(--raio-total);
+  background: rgba(5, 16, 27, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  font-size: 12px; font-weight: var(--peso-medio); letter-spacing: .02em; color: var(--cor-osso-100);
+}
+
+.bio-caption { margin: var(--esp-3) 0 0; font-size: 13px; line-height: 1.45; color: var(--tinta-3); }
+.bio-text { margin: var(--esp-5) 0 0; max-width: 46ch; color: var(--cor-navy-100); }
+
+.bio-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--esp-4) var(--esp-6); margin-top: var(--esp-6); }
+.bio-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 60px; padding: 0 var(--esp-6); border: 0; border-radius: var(--raio-total);
+  background: var(--sinal); color: var(--sinal-tinta); cursor: pointer;
+  font-size: var(--tipo-corpo); font-weight: var(--peso-semi); letter-spacing: -.01em; text-decoration: none;
+  transition: background-color var(--dur-2) var(--ease-padrao), transform var(--dur-1) var(--ease-padrao);
+}
+.bio-cta svg { width: 22px; height: 22px; fill: currentColor; }
+.bio-cta:hover { background: var(--cor-osso-100); }
+.bio-cta:active { transform: scale(.98); }
+.bio-more {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+  font-size: var(--tipo-corpo-p); font-weight: var(--peso-medio); color: var(--tinta); text-decoration: none;
+}
+.bio-more svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; transition: transform var(--dur-2) var(--ease-padrao); }
+.bio-more:hover svg { transform: translateX(3px); }
+
+.bio-footer {
+  display: flex; flex-wrap: wrap; gap: var(--esp-2) var(--esp-5);
+  margin-top: var(--esp-8); padding-top: var(--esp-5); border-top: var(--traco-fino) solid var(--traco);
+  font-size: 13px; color: var(--tinta-3);
+}
+.bio-footer a { color: inherit; text-decoration: none; min-height: 32px; display: inline-flex; align-items: center; }
+.bio-footer a:hover { color: var(--tinta); }
+
+.bio-dock { display: none; }
+
+/* Formulário ------------------------------------------------------------- */
+
+.bio-dialog {
+  width: min(480px, calc(100% - 32px)); max-height: calc(100svh - 32px);
+  margin: auto; padding: 0; border: var(--traco-fino) solid var(--traco); border-radius: var(--raio-0);
+  background: var(--fundo-2); color: var(--tinta); box-shadow: var(--sombra-camada);
+}
+.bio-dialog[open] { animation: bio-pop var(--dur-3) var(--ease-entrada); }
+.bio-dialog::backdrop { background: rgba(5, 16, 27, .72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.bio-form { display: flex; flex-direction: column; gap: var(--esp-4); padding: var(--esp-6); }
+.bio-form-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--esp-4); }
+.bio-form h2 { margin: 0; font-size: 28px; line-height: 1.08; font-weight: var(--peso-regular); letter-spacing: -.035em; }
+.bio-form h2 strong { font-weight: var(--peso-semi); }
+.bio-close {
+  display: grid; place-items: center; width: 44px; height: 44px; margin: -8px -12px 0 0;
+  border: 0; border-radius: var(--raio-olho); background: none; cursor: pointer; color: var(--tinta-2);
+}
+.bio-close svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.bio-close:hover { color: var(--tinta); }
+.bio-form-lead { margin: calc(var(--esp-2) * -1) 0 var(--esp-2); font-size: var(--tipo-corpo-p); color: var(--tinta-2); }
+.bio-field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: var(--peso-medio); color: var(--tinta-2); }
+.bio-field small { font-size: inherit; font-weight: var(--peso-regular); color: var(--tinta-3); }
+.bio-field input {
+  width: 100%; min-height: 52px; padding: 0 var(--esp-4);
+  border: var(--traco-fino) solid var(--traco); border-radius: var(--raio-0);
+  background: var(--fundo); color: var(--tinta);
+  font: var(--peso-regular) 16px/1.2 var(--fonte);
+  transition: border-color var(--dur-2) var(--ease-padrao);
+}
+.bio-field input::placeholder { color: var(--tinta-3); }
+.bio-field input:focus { outline: none; border-color: var(--sinal); }
+.bio-field input[aria-invalid="true"] { border-color: var(--cor-erro); }
+.bio-chips { display: flex; flex-wrap: wrap; gap: var(--esp-2); margin: 0; padding: 0; border: 0; }
+.bio-chips legend { padding: 0; margin-bottom: 6px; font-size: 13px; font-weight: var(--peso-medio); color: var(--tinta-2); }
+.bio-chips label { position: relative; }
+.bio-chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.bio-chips span {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--esp-4);
+  border: var(--traco-fino) solid var(--traco); border-radius: var(--raio-total);
+  font-size: 14px; color: var(--tinta-2);
+  transition: background-color var(--dur-2) var(--ease-padrao), color var(--dur-2) var(--ease-padrao), border-color var(--dur-2) var(--ease-padrao);
+}
+.bio-chips input:checked + span { background: var(--cor-osso-100); border-color: var(--cor-osso-100); color: var(--cor-navy-800); }
+.bio-chips input:focus-visible + span { outline: 2px solid var(--foco); outline-offset: 2px; }
+.bio-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.bio-error { margin: 0; min-height: 0; font-size: 14px; color: #FF8A80; }
+.bio-error:empty { display: none; }
+.bio-submit { width: 100%; margin-top: var(--esp-2); }
+.bio-submit:disabled { cursor: progress; opacity: .8; }
+.bio-legal { margin: 0; font-size: 12px; text-align: center; color: var(--tinta-3); }
+.bio-legal a { color: inherit; text-underline-offset: 3px; }
+
+/* Tablet e celular ------------------------------------------------------- */
+
+@media (max-width: 1023px) {
+  .bio { display: block; }
+  .bio-media { position: relative; height: min(64svh, 120vw, 860px); }
+  .bio-photo { object-position: 50% 6%; -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 97%); mask-image: linear-gradient(to bottom, #000 52%, transparent 97%); }
+  .bio-sign { left: 3%; bottom: 13%; font-size: clamp(72px, 19vw, 150px); }
+  .bio-content { position: relative; max-width: 640px; margin-top: -7svh; padding: 0 20px calc(112px + env(safe-area-inset-bottom)); }
+  .bio-top { padding-bottom: var(--esp-4); }
+  .bio-stats { padding: var(--esp-4) 0 var(--esp-5); }
+  .bio-switch-bar {
+    position: sticky; top: env(safe-area-inset-top); z-index: var(--z-nav);
+    margin: 0 -20px; padding: 12px 20px; background: var(--fundo);
+  }
+  .bio-panel { scroll-margin-top: 88px; }
+  .bio-dock {
+    position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: var(--z-nav);
+    display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px;
+    border-radius: var(--raio-total); background: var(--sinal); color: var(--sinal-tinta);
+    font-size: var(--tipo-corpo); font-weight: var(--peso-semi); text-decoration: none;
+    transition: transform var(--dur-3) var(--ease-entrada), opacity var(--dur-2) var(--ease-padrao);
+  }
+  .bio-dock svg { width: 22px; height: 22px; fill: currentColor; }
+  .bio-dock.is-hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
+  .bio-dialog {
+    width: 100%; max-width: 100%; max-height: 94svh; margin: auto 0 0;
+    border-width: var(--traco-fino) 0 0;
+  }
+  .bio-dialog[open] { animation: bio-sheet var(--dur-4) var(--ease-entrada); }
+  .bio-form { padding: var(--esp-5) 20px calc(var(--esp-5) + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 380px) {
+  .bio-stats { gap: var(--esp-3); }
+  .bio-stats strong { font-size: 24px; }
+  .bio-switch button { font-size: 14px; padding: 0 var(--esp-2); }
+}
+
+/* Movimento -------------------------------------------------------------- */
+
+@keyframes bio-breathe { from { transform: scale(1); } to { transform: scale(1.05); } }
+@keyframes bio-write {
+  from { clip-path: inset(-60% 105% -60% -20%); opacity: .4; }
+  to { clip-path: inset(-60% -20% -60% -20%); opacity: 1; }
+}
+@keyframes bio-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes bio-swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes bio-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes bio-sheet { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes bio-cases {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  33.3% { opacity: 1; }
+  38.3% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bio-photo, .bio-sign, .bio-in, .bio-panel, .bio-dialog[open], .bio-cases figure { animation: none !important; }
+  .bio-cases figure:first-child { opacity: 1; }
+}
