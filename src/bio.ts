@@ -25,6 +25,8 @@ function select(tab: HTMLButtonElement, focus = false) {
     document.getElementById(item.getAttribute('aria-controls')!)!.hidden = !active;
   }
   switcher.dataset.perfil = tab.dataset.perfil;
+  // Cases de cada aba: empresas em "Sou empresa", marca pessoal em "Sou profissional".
+  document.querySelectorAll<HTMLElement>('.bio-case').forEach(item => item.hidden = item.dataset.perfil !== tab.dataset.perfil);
   if (focus) tab.focus();
   observeActions();
 }
