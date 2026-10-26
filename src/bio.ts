@@ -12,6 +12,23 @@ const utm = Object.fromEntries(UTM_KEYS.flatMap(key => {
   return value ? [[key, value.slice(0, 100)]] : [];
 }));
 
+// Vídeo -------------------------------------------------------------------
+
+// Começa sem som (regra dos navegadores); o botão liga o som e recomeça a fala.
+const video = document.querySelector<HTMLVideoElement>('.bio-video')!;
+const sound = document.querySelector<HTMLButtonElement>('.bio-sound')!;
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) video.pause();
+sound.addEventListener('click', () => {
+  const on = video.muted;
+  video.muted = !on;
+  if (on) {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  }
+  sound.setAttribute('aria-pressed', String(on));
+  sound.querySelector('span')!.textContent = on ? 'Sem som' : 'Ativar som';
+});
+
 // Abas --------------------------------------------------------------------
 
 const switcher = document.querySelector<HTMLElement>('.bio-switch')!;
