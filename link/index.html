@@ -12,7 +12,13 @@
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <div class="bio">
     <header class="bio-media">
-      <video class="bio-video" src="/assets/bio/jabez.mp4" poster="/assets/bio/jabez-poster.webp" autoplay muted loop playsinline preload="auto" aria-label="Jabez Oliveira, fundador e CEO da Boop, apresenta a Boop. O vídeo tem legenda."></video>
+      <!-- Computador: 1080p; celular: 720p. AV1 onde o navegador toca (metade do peso), H.264 no resto (iPhones antigos). -->
+      <video class="bio-video" poster="/assets/bio/jabez-poster.webp" autoplay muted loop playsinline preload="auto" aria-label="Jabez Oliveira, fundador e CEO da Boop, apresenta a Boop. O vídeo tem legenda.">
+        <source src="/assets/bio/jabez-1080-av1.mp4" type='video/mp4; codecs="av01.0.08M.08"' media="(min-width: 1024px)" />
+        <source src="/assets/bio/jabez-1080.mp4" type="video/mp4" media="(min-width: 1024px)" />
+        <source src="/assets/bio/jabez-720-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
+        <source src="/assets/bio/jabez-720.mp4" type="video/mp4" />
+      </video>
       <button type="button" class="bio-sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="bio-sound-off" d="m16 9 6 6m0-6-6 6"/><path class="bio-sound-on" d="M15.5 8.5a5 5 0 0 1 0 7m3-10a9 9 0 0 1 0 13"/></svg><span>Ativar som</span></button>
       <h1 class="bio-sign">Jabez Oliveira</h1>
     </header>
