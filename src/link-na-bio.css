@@ -1,0 +1,220 @@
+@import './bio.css';
+
+/* Página de vendas do link na bio. Celular primeiro; botões, formulário, botão fixo
+   e rodapé vêm do link da bio (bio.css). Cada seção troca de plano: navy, osso, ciano. */
+
+main > section { background: var(--fundo); color: var(--tinta); padding-block: var(--secao-y-densa); }
+.lb-wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+.lb-eyebrow {
+  margin: 0 0 var(--esp-3); font-size: var(--tipo-rotulo); line-height: var(--lh-rotulo);
+  font-weight: var(--peso-semi); letter-spacing: var(--tr-rotulo); text-transform: uppercase; color: var(--sinal-texto);
+}
+.lb-h2 {
+  margin: 0 0 var(--esp-6); max-width: 16ch;
+  font-size: clamp(36px, 9.4vw, 64px); line-height: 1.02; font-weight: var(--peso-regular); letter-spacing: -.04em;
+}
+.lb-h2 strong { font-weight: var(--peso-semi); }
+
+/* Ícones de lista: máscara, para herdar a cor do plano. */
+.lb-col li::before, .lb-offer-list li::before, .lb-faq summary::after {
+  content: ''; position: absolute; left: 0; top: .2em; width: 20px; height: 20px; background: currentColor;
+  -webkit-mask: var(--icone) center / contain no-repeat; mask: var(--icone) center / contain no-repeat;
+}
+.lb-col-common li::before { --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7 7 17'/%3E%3C/svg%3E"); color: var(--cor-navy-400); }
+.lb-col-boop li::before, .lb-offer-list li::before { --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); color: var(--sinal); }
+
+/* Barra ------------------------------------------------------------------ */
+
+.lb-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--esp-4);
+  width: min(1120px, 100% - 40px); margin-inline: auto; padding-top: calc(var(--esp-4) + env(safe-area-inset-top));
+}
+.lb-logo { display: flex; align-items: center; min-height: 44px; }
+.lb-logo img { width: auto; height: 24px; }
+.lb-bar-cta {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--esp-5);
+  border: var(--traco-fino) solid var(--traco); border-radius: var(--raio-total);
+  font-size: var(--tipo-corpo-p); font-weight: var(--peso-semi); color: var(--tinta); text-decoration: none;
+  transition: background-color var(--dur-2) var(--ease-padrao), color var(--dur-2) var(--ease-padrao);
+}
+.lb-bar-cta:hover { background: var(--cor-osso-100); color: var(--cor-navy-800); }
+
+/* 1. Hero ---------------------------------------------------------------- */
+
+.lb-hero { overflow: hidden; padding-top: var(--esp-7); }
+.lb-hero-grid { display: grid; gap: var(--esp-8); }
+.lb-hero h1 {
+  margin: 0; font-size: clamp(76px, 24vw, 176px); line-height: .86; font-weight: var(--peso-semi); letter-spacing: -.055em;
+  animation: bio-rise var(--dur-4) var(--ease-entrada) both;
+}
+.lb-hero h1 span { color: var(--sinal); }
+.lb-lead {
+  margin: var(--esp-5) 0 0; max-width: 36ch;
+  font-size: var(--tipo-corpo-g); line-height: var(--lh-corpo-g); color: var(--cor-navy-100);
+}
+.lb-price-tag { display: flex; align-items: center; gap: var(--esp-4); margin: var(--esp-6) 0 0; }
+.lb-price-tag strong { font-size: 44px; line-height: 1; font-weight: var(--peso-semi); letter-spacing: -.045em; white-space: nowrap; }
+.lb-price-tag span { padding-left: var(--esp-4); border-left: var(--traco-fino) solid var(--traco); font-size: 13px; line-height: 1.35; color: var(--tinta-2); }
+.lb-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-4) var(--esp-6); margin-top: var(--esp-6); }
+
+/* Os dois cases no ar, em celulares. O aparelho é a exceção ao raio 0. */
+.lb-phones { position: relative; width: 100%; max-width: 440px; margin-inline: auto; aspect-ratio: 1 / 1.32; }
+.lb-phone {
+  position: absolute; overflow: hidden; aspect-ratio: 640 / 1385;
+  border: 6px solid var(--cor-navy-900); border-radius: 38px; background: var(--cor-navy-900);
+  box-shadow: 0 0 0 1px var(--cor-navy-600), var(--sombra-camada);
+  animation: lb-phone var(--dur-5) var(--ease-entrada) both;
+}
+.lb-phone img { width: 100%; height: 100%; object-fit: cover; }
+.lb-phone-front { z-index: 1; left: 4%; top: 0; width: 56%; --giro: -4deg; animation-delay: .15s; }
+.lb-phone-back { right: 2%; top: 13%; width: 48%; --giro: 6deg; animation-delay: .3s; }
+.lb-phone-back img { opacity: .9; }
+
+/* 2. A virada ------------------------------------------------------------ */
+
+.lb-turn { padding-block: var(--secao-y); view-timeline: --lb-virada block; }
+.lb-quote { margin: 0; font-size: clamp(28px, 7.4vw, 64px); line-height: 1.2; font-weight: var(--peso-medio); letter-spacing: -.05em; color: var(--tinta-2); }
+.lb-strike { position: relative; display: inline-block; }
+.lb-strike::after {
+  content: ''; position: absolute; left: -2%; right: -2%; top: 55%; height: 3px;
+  background: var(--tinta); transform-origin: left;
+}
+.lb-turn h2 {
+  margin: var(--esp-6) 0 0; max-width: 11ch;
+  font-size: clamp(48px, 13vw, 128px); line-height: .96; font-weight: var(--peso-semi); letter-spacing: -.05em;
+}
+.lb-mark { position: relative; isolation: isolate; white-space: nowrap; }
+.lb-mark::after {
+  content: ''; position: absolute; z-index: -1; left: 0; bottom: .09em; width: 100%; height: .13em;
+  background: var(--cor-ciano-500); transform-origin: left;
+}
+.lb-turn-text { margin: var(--esp-6) 0 0; max-width: 40ch; font-size: var(--tipo-corpo-g); line-height: var(--lh-corpo-g); color: var(--tinta-2); }
+
+/* Risca a frase e sublinha a resposta conforme a seção passa. Sem suporte: já riscado. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lb-strike::after, .lb-mark::after { animation: lb-draw linear both; animation-timeline: --lb-virada; }
+    .lb-strike::after { animation-range: cover 15% cover 35%; }
+    .lb-mark::after { animation-range: cover 32% cover 50%; }
+  }
+}
+
+/* 3. Comum x Boop -------------------------------------------------------- */
+
+.lb-compare-grid { display: grid; gap: var(--esp-4); }
+.lb-col { padding: var(--esp-5); border: var(--traco-fino) solid var(--traco); }
+.lb-col h3 {
+  margin: 0 0 var(--esp-5); font-size: var(--tipo-rotulo); line-height: var(--lh-rotulo);
+  font-weight: var(--peso-semi); letter-spacing: var(--tr-rotulo); text-transform: uppercase; color: var(--tinta-2);
+}
+.lb-col ul { display: grid; gap: var(--esp-4); margin: 0; padding: 0; list-style: none; }
+.lb-col li { position: relative; padding-left: 32px; }
+.lb-col-common li { color: var(--tinta-2); }
+.lb-col-boop { border-color: var(--sinal); background: var(--fundo-2); }
+.lb-col-boop h3 { color: var(--sinal-texto); }
+
+/* 4. Cases --------------------------------------------------------------- */
+
+.lb-case-list { margin: 0; padding: 0; list-style: none; border-top: var(--traco-medio) solid var(--traco-forte); }
+.lb-case-list a {
+  display: grid; gap: 2px; padding: var(--esp-5) 0;
+  border-bottom: var(--traco-fino) solid var(--traco); color: inherit; text-decoration: none;
+}
+.lb-case-tag { font-size: 13px; color: var(--tinta-2); }
+.lb-case-name { font-size: clamp(32px, 8vw, 56px); line-height: 1.05; font-weight: var(--peso-semi); letter-spacing: -.045em; }
+.lb-case-url { display: inline-flex; align-items: center; gap: 6px; font-size: var(--tipo-corpo-p); font-weight: var(--peso-medio); color: var(--sinal-texto); overflow-wrap: anywhere; }
+.lb-case-url svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; transition: transform var(--dur-2) var(--ease-padrao); }
+.lb-case-list a:hover .lb-case-url svg { transform: translate(2px, -2px); }
+.lb-note { margin: var(--esp-5) 0 0; max-width: 46ch; font-size: var(--tipo-corpo-p); color: var(--tinta-2); }
+
+/* 5. O que vem ----------------------------------------------------------- */
+
+.lb-features { display: grid; margin: 0; padding: 0; list-style: none; counter-reset: item; }
+.lb-features li {
+  counter-increment: item; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: var(--esp-3);
+  padding: var(--esp-5) 0; border-top: var(--traco-fino) solid var(--traco);
+}
+.lb-features li::before {
+  content: counter(item, decimal-leading-zero); grid-row: span 2; padding-top: 5px;
+  font-size: 13px; font-weight: var(--peso-medio); letter-spacing: var(--tr-tec); font-variant-numeric: tabular-nums; color: var(--sinal-texto);
+}
+.lb-features h3, .lb-step-list h3 { margin: 0; font-size: var(--tipo-t3); line-height: var(--lh-t3); font-weight: var(--peso-semi); letter-spacing: var(--tr-t3); }
+.lb-features p, .lb-step-list p { margin: var(--esp-1) 0 0; color: var(--tinta-2); }
+
+/* 6. Como funciona: os números são os olhos da marca. -------------------- */
+
+.lb-step-list { display: grid; gap: var(--esp-6); margin: 0; padding: 0; list-style: none; counter-reset: passo; }
+.lb-step-list li { counter-increment: passo; }
+.lb-step-list li::before {
+  content: counter(passo); display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: var(--esp-4);
+  border-radius: var(--raio-olho); background: var(--cor-navy-800); color: var(--cor-osso-100);
+  font-size: 20px; font-weight: var(--peso-semi); box-shadow: inset 0 0 0 4px var(--cor-navy-800), inset 0 0 0 6px var(--cor-ciano-500);
+}
+
+/* 7. Preço --------------------------------------------------------------- */
+
+.lb-offer { padding-block: var(--secao-y); }
+.lb-offer-grid { display: grid; gap: var(--esp-7); }
+.lb-price { margin: 0; font-size: clamp(132px, 42vw, 280px); line-height: .8; font-weight: var(--peso-semi); letter-spacing: -.065em; }
+.lb-price span { margin-right: .06em; font-size: .28em; letter-spacing: -.02em; vertical-align: 1.55em; }
+.lb-offer-sub { margin: var(--esp-5) 0 0; font-size: var(--tipo-t3); font-weight: var(--peso-medio); letter-spacing: var(--tr-t3); }
+.lb-offer-list { margin: 0; padding: 0; list-style: none; border-top: var(--traco-medio) solid var(--tinta); }
+.lb-offer-list li { position: relative; padding: var(--esp-4) 0 var(--esp-4) 32px; border-bottom: var(--traco-fino) solid var(--traco); font-weight: var(--peso-medio); }
+.lb-offer-list li::before { top: calc(var(--esp-4) + .2em); }
+.lb-offer-note { margin: var(--esp-4) 0 var(--esp-6); max-width: 44ch; font-size: var(--tipo-corpo-p); color: var(--tinta-2); }
+.lb-offer .bio-cta { width: 100%; }
+.lb-offer .bio-cta:hover { background: var(--cor-navy-600); }
+
+/* 8. Dúvidas e convite final --------------------------------------------- */
+
+.lb-faq details { max-width: 880px; border-top: var(--traco-fino) solid var(--traco); }
+.lb-faq details:last-of-type { border-bottom: var(--traco-fino) solid var(--traco); }
+.lb-faq summary {
+  position: relative; display: flex; align-items: center; min-height: 68px; padding-right: 40px; cursor: pointer; list-style: none;
+  font-size: var(--tipo-t3); line-height: var(--lh-t3); font-weight: var(--peso-medio); letter-spacing: var(--tr-t3);
+}
+.lb-faq summary::-webkit-details-marker { display: none; }
+.lb-faq summary::after {
+  --icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  left: auto; right: 4px; top: calc(50% - 10px); color: var(--sinal); transition: transform var(--dur-2) var(--ease-padrao);
+}
+.lb-faq details[open] summary::after { transform: rotate(45deg); }
+.lb-faq details p { margin: 0 0 var(--esp-5); max-width: 56ch; color: var(--tinta-2); }
+.lb-closing { display: flex; flex-direction: column; align-items: flex-start; gap: var(--esp-6); padding-top: var(--esp-9); }
+.lb-closing p { margin: 0; font-size: clamp(48px, 13vw, 128px); line-height: .96; font-weight: var(--peso-regular); letter-spacing: -.05em; }
+.lb-closing p span { font-weight: var(--peso-semi); color: var(--sinal-texto); }
+
+/* Tablet e computador ---------------------------------------------------- */
+
+@media (max-width: 1023px) {
+  .lb-faq { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }
+}
+@media (min-width: 768px) {
+  .lb-compare-grid, .lb-features { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--esp-6); }
+  .lb-col { padding: var(--esp-6); }
+  .lb-step-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lb-offer .bio-cta { width: auto; }
+}
+@media (min-width: 1024px) {
+  .lb-logo img { height: 28px; }
+  .lb-hero { padding-top: var(--esp-6); }
+  .lb-phones { max-width: 500px; }
+  .lb-hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: center; min-height: calc(100svh - 76px); }
+  .lb-turn-text { margin-left: 50%; }
+  .lb-features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lb-case-list a { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'tag url' 'name url'; align-items: end; padding: var(--esp-6) 0; }
+  .lb-case-tag { grid-area: tag; }
+  .lb-case-name { grid-area: name; }
+  .lb-case-url { grid-area: url; padding-bottom: .5em; }
+  .lb-offer-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+}
+
+/* Movimento -------------------------------------------------------------- */
+
+@keyframes lb-phone { from { opacity: 0; transform: translateY(40px) rotate(0deg); } to { opacity: 1; transform: rotate(var(--giro)); } }
+@keyframes lb-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-hero h1 { animation: none; }
+  .lb-phone { animation: none; transform: rotate(var(--giro)); }
+}
