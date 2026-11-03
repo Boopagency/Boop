@@ -15,6 +15,7 @@ export const pages = [
   { path: '/', file: 'index.html', title: 'Gestão de marca e crescimento | Boop', description: site.description, index: true },
   { path: '/privacidade/', file: 'privacidade/index.html', title: 'Privacidade | Boop', description: 'Como funcionam o contato por e-mail, os conteúdos externos e a privacidade neste site da Boop.', index: true },
   { path: '/link/', file: 'link/index.html', title: 'Jabez Oliveira | Boop', description: 'Jabez Oliveira, fundador e CEO da Boop. Gestão de marca e crescimento: converse com a equipe pelo WhatsApp.', index: false },
-  { path: '/link-na-bio/', file: 'link-na-bio/index.html', title: 'Link na bio que capta clientes | Boop', description: 'Link na bio feito pela Boop: a cara da sua marca, formulário antes do WhatsApp e a origem de cada contato. R$ 97, pagamento único.', index: true },
+  { path: '/link-na-bio/', file: 'link-na-bio/index.html', title: 'Link na bio que capta clientes | Boop', description: 'Link na bio feito pela Boop: a cara da sua marca, formulário antes do WhatsApp e a origem de cada contato. R$ 97, pagamento único.', index: true,
+    image: { src: '/assets/link-na-bio/og-link-na-bio.jpg', width: 1200, height: 630, alt: 'Link na bio. R$ 97, pagamento único. Três celulares com páginas de link na bio.' } },
   { path: '/404.html', file: '404.html', title: 'Página não encontrada | Boop', description: 'Não encontramos esta página. Volte ao início ou converse com a Boop.', index: false },
 ];

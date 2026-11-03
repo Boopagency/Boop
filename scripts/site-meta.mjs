@@ -23,6 +23,8 @@ export const securityHeaders = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
 };
 export function head(page) {
+  // Prévia de compartilhamento: a da página, se tiver; senão a do site.
+  const img = page.image || { src: site.socialImage, width: 1344, height: 756, alt: 'Boop: fazemos coisas que as pessoas lembram.' };
   return `<title>${escape(page.title)}</title>
   <meta name="description" content="${escape(page.description)}" />
   <meta name="robots" content="${page.index ? 'index, follow, max-image-preview:large' : 'noindex, follow'}" />
@@ -33,16 +35,16 @@ export function head(page) {
   <meta property="og:title" content="${escape(page.title)}" />
   <meta property="og:description" content="${escape(page.description)}" />
   <meta property="og:url" content="${site.url}${page.path}" />
-  <meta property="og:image" content="${site.url}${site.socialImage}" />
+  <meta property="og:image" content="${site.url}${img.src}" />
   <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1344" />
-  <meta property="og:image:height" content="756" />
-  <meta property="og:image:alt" content="Boop: fazemos coisas que as pessoas lembram." />
+  <meta property="og:image:width" content="${img.width}" />
+  <meta property="og:image:height" content="${img.height}" />
+  <meta property="og:image:alt" content="${escape(img.alt)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escape(page.title)}" />
   <meta name="twitter:description" content="${escape(page.description)}" />
-  <meta name="twitter:image" content="${site.url}${site.socialImage}" />
-  <meta name="twitter:image:alt" content="Boop: fazemos coisas que as pessoas lembram." />
+  <meta name="twitter:image" content="${site.url}${img.src}" />
+  <meta name="twitter:image:alt" content="${escape(img.alt)}" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
