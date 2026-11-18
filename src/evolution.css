@@ -31,3 +31,5 @@ html:not(.scroll-motion) .method-viewport{overflow:visible;margin:0;padding:0}ht
 @media(prefers-reduced-motion:reduce){.founder-photo img,.case-velmont>img,.case-open>span{transition:none!important;transform:none!important}}
 @media(max-width:767px){.case-copy h3 br,.cap-index li>br{display:block}.cap-world .world-description,.turn-footer p{font-size:16px}.testimonials-heading h2{font-size:clamp(44px,11vw,80px)}.quote-symbol{font-size:112px}}
 @media(prefers-reduced-motion:reduce){.cap-world,.request-quote{transition:none!important}.scene-pin{position:relative!important;height:auto!important}.scroll-scene{height:auto!important}.turn h2{opacity:1!important}.scene-progress{display:none}.method-steps{will-change:auto}}
+
+.works-all{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:4px}.works-all .icon-arrow{width:16px;height:16px}.works-all:hover .icon-arrow{transform:translate(2px,-2px)}
